@@ -1,0 +1,89 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Oct 09, 2024 at 09:03 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `university_hills`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `overall_payment`
+--
+
+CREATE TABLE `overall_payment` (
+  `payment_trackingno` varchar(150) NOT NULL,
+  `totalprice` float NOT NULL,
+  `total_user` int(11) NOT NULL,
+  `total_valid` int(11) NOT NULL,
+  `date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `overall_payment`
+--
+
+INSERT INTO `overall_payment` (`payment_trackingno`, `totalprice`, `total_user`, `total_valid`, `date`) VALUES
+('Uh_PAYMENT89628', 13613.2, 7, 2, '2024-03-29'),
+('Uh_PAYMENT759194', 13581.2, 7, 3, '2024-04-29'),
+('Uh_PAYMENT863066', 1444, 3, 0, '2024-04-29'),
+('Uh_PAYMENT288971', 1185.2, 3, 3, '2024-04-29'),
+('Uh_PAYMENT58887', 1278, 2, 0, '2024-04-29'),
+('Uh_PAYMENT440865', 1166.8, 1, 1, '2024-04-29'),
+('Uh_PAYMENT756562', 4182, 3, 2, '2024-04-29'),
+('Uh_PAYMENT501744', 13724, 7, 0, '2024-04-29'),
+('Uh_PAYMENT44184', 1150, 1, 0, '2024-04-30'),
+('Uh_PAYMENT124872', 1130, 0, 1, '2024-04-30'),
+('Uh_PAYMENT888914', 1130, 0, 1, '2024-04-30'),
+('Uh_PAYMENT683230', 1150, 0, 0, '2024-04-30'),
+('Uh_PAYMENT354302', 250, 1, 0, '2024-03-30'),
+('Uh_PAYMENT463886', 40, 1, 1, '2024-04-30'),
+('Uh_PAYMENT710772', 8, 1, 1, '2024-05-01'),
+('Uh_PAYMENT62709', 50, 1, 0, '2024-05-01'),
+('Uh_PAYMENT357912', 410.4, 3, 1, '2024-05-01'),
+('Uh_PAYMENT35610', 100, 1, 0, '2024-05-01'),
+('Uh_PAYMENT617338', 68, 1, 0, '2024-05-03'),
+('Uh_PAYMENT945340', 560, 2, 0, '2024-05-03'),
+('Uh_PAYMENT873853', 990, 2, 0, '2024-05-04'),
+('Uh_PAYMENT141185', 936, 3, 0, '2024-05-04'),
+('Uh_PAYMENT191509', 156, 1, 0, '2024-05-04'),
+('Uh_PAYMENT93587', 156, 0, 0, '2024-05-04'),
+('Uh_PAYMENT633471', 156, 1, 0, '2024-05-04'),
+('Uh_PAYMENT71127', 462, 2, 0, '2024-05-04'),
+('Uh_PAYMENT137184', 4314, 3, 0, '2024-05-04'),
+('Uh_PAYMENT142918', 156, 0, 0, '2024-05-04'),
+('Uh_PAYMENT179995', 1128, 1, 0, '2024-05-04'),
+('Uh_PAYMENT879030', 200, 1, 0, '2024-05-04'),
+('Uh_PAYMENT49171', 2060, 1, 0, '2024-05-04'),
+('Uh_PAYMENT87885', 2060, 0, 0, '2024-05-04'),
+('Uh_PAYMENT936172', 1120, 1, 0, '2024-05-04'),
+('Uh_PAYMENT180060', 520, 2, 0, '2024-05-04'),
+('Uh_PAYMENT574035', 520, 0, 0, '2024-05-04'),
+('Uh_PAYMENT504578', 260, 1, 0, '2024-05-04'),
+('Uh_PAYMENT6524', 9498, 1, 1, '2024-05-05'),
+('Uh_PAYMENT684545', 11835, 0, 0, '2024-05-05'),
+('Uh_PAYMENT930362', 610, 1, 0, '2024-05-05'),
+('Uh_PAYMENT979310', 720, 3, 0, '2024-10-09'),
+('Uh_PAYMENT957561', 720, 0, 0, '2024-10-09'),
+('Uh_PAYMENT874922', 1080, 2, 0, '2024-10-09');
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
