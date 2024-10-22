@@ -450,14 +450,14 @@ $result = mysqli_query($connection, $query);
                     <div class="col-md-6">
                         <div class="input-group">
                         <input type="text" id="searchInput" class="form-control dark" placeholder="Search..." onkeypress="handleKeyPress(event)">
-                            <button class="btn btn-outline-dark" type="button" onclick="searchFeedback()"><i class="fas fa-search"></i> Search</button>
+                            <button class="btn btn-primary" type="button" onclick="searchFeedback()"><i class="fas fa-search"></i> Search</button>
                             
                         </div>
                     </div>
 
                 <div class="col-md-6 text-end">
-                <button class="btn btn-outline-dark" type="button" onclick="refreshList()"><i class="fas fa-sync-alt"></i> </button>
-                <button class="btn btn-outline-dark dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter Feedback</button>
+                <button class="btn btn-success" type="button" onclick="refreshList()"><i class="fas fa-sync-alt"></i> </button>
+                <button class="btn btn-primary dropdown-toggle"  type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter Feedback</button>
                 <ul class="dropdown-menu" aria-labelledby="filterDropdown">
         <li><a class="dropdown-item" href="#" onclick="showAll()">Show All</a></li>
         <li><a class="dropdown-item" href="#" onclick="filterFeedback(5)">⭐⭐⭐⭐⭐</a></li>
