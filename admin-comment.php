@@ -67,66 +67,87 @@ $result = mysqli_query($connection, $query);
 
 
         <style>
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse; /* Collapse borders to remove space between cells */
+    font-family: Arial, sans-serif;
+    margin-top: 20px;
+}
+
+/* Header Styling */
+
+
+/* Table Header Cells */
+.custom-table th {
+    padding: 12px; /* Padding inside header cells */
+    border: 1px solid #ddd; /* Border for header cells */
+    text-align: center; /* Center-align text in header */
+    font-weight: bold;
+}
+
+/* Table Data Cells */
+.custom-table td {
+    padding: 12px; /* Padding inside table cells */
+    border: 1px solid #ddd; /* Border for table cells */
+    text-align: center; /* Center-align text */
+}
+
+/* Row striping */
+.custom-table tr:nth-child(odd) {
+    background-color: #e6e6e6; /* Light gray background for even rows */
+}
+
+/* Hover effect on rows */
+
+
+/* Specific style for "No feedback found" message */
+.custom-table .no-feedback {
+    text-align: center;
+    font-weight: bold;
+    color: #ff0000; /* Red color for no feedback message */
+}
+
+/* Optional: Table Borders */
+.custom-table {
+    border: 1px solid #ddd; /* Border around the entire table */
+}
+
+            
+            .payment-table {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .payment-table th, #payment-table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-family: Arial, sans-serif;
+            }
+
+            .payment-table th {
+            font-weight: bold;
+            }
+
+            .payment-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+            }
+           
             .main-content{
                 height: 100vh;
                 overflow-x: hidden;
                 padding-left: 5%;
             }
 
-    .mesa{
-     
-    width: 100%;
-    margin-bottom: 1rem;
-    background-color: white;
-    border-collapse: collapse;
-    }
-
-            /* For table-bordered */
-.table-bordered {
-    border: 2px solid #343a40; /* Dark border for the table */
-    border-radius: 5px; /* Rounded corners */
-}
-
-.table-bordered th,
-.table-bordered td {
-    border: 1px solid #dee2e6; /* Standard border between cells */
-    padding: 12px; /* More padding for better readability */
-}
-
-/* For table-striped */
-.table-wipe tbody tr:nth-of-type(odd) {
-    background-color: #f2f2f2; /* Light gray background for odd rows */
-}
-
-/* Custom hover effect for table rows */
-.table-wipe tbody tr:hover {
-    background-color: #e9ecef; /* Light gray hover effect */
-    cursor: pointer;
-}
-
-/* Header styling */
-.table-bordered thead th {
-     /* Dark background for headers */
-     /* White text in headers */
-    text-align: center; /* Centered header text */
-    font-weight: bold;
-}
-
-/* Optional: Change the font style */
-.table-bordered {
-    font-size: 14px; /* Font size */
-}
-
-            .main-content{
-                position: relative;
-                background-color: #eee;
-            
-                top:0;
-                left:80px;
-                transition: all 0.5s ease;
-                width: calc(100% - 80px);
-                padding: 1rem;
+            #bold-text{
+                font-weight: bold;
             }
+
+
+
             .navbar{
                 display:none
             }
@@ -160,7 +181,7 @@ $result = mysqli_query($connection, $query);
                 font-size: 8pt;
                 margin-top: 0px;
             }
-           
+
 
 
             }
@@ -198,10 +219,7 @@ $result = mysqli_query($connection, $query);
 
                     }
 
-                        .table thead th,
-                        .table tbody td {
-                    background-color: beige;
-                    }
+                       
                     
             </style>
 
@@ -451,17 +469,19 @@ $result = mysqli_query($connection, $query);
             </div>
                 </div>
 
-                <table id="feedbackTable" class="mesa table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Customer Name</th>
-                            <th scope="col">Rate</th>
-                            <th scope="col">Comment</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Time</th>
-                        </tr>
-                    </thead>
+                <table id="feedbackTable" class="custom-table">
+                   
+                       
+           
                     <tbody>
+                    <tr>
+                        <td id="bold-text" scope="col">Customer Name</td>
+                            <td id="bold-text" scope="col">Rate</td>
+                            <td id="bold-text" scope="col">Comment</td>
+                            <td id="bold-text" scope="col">Date</td>
+                            <td id="bold-text" scope="col">Time</td>
+                            
+                        </tr>
                             <?php
                             $sql = "SELECT * FROM feedback";
                             $result = mysqli_query($connection, $sql);
