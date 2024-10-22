@@ -486,10 +486,17 @@ if (isset($_POST['logout'])) {
                                 padding-left: 6%;
                                 padding-right: 6%;
                             }
+                            .title-bar{
+                                padding-top: 3%;
+                                padding-left: 8%;
+                                font-weight: 600;
+                            
+                            }
                         </style>
   
     <div class="main-content">
     <h1>University Hills Sports Lounge</h1>
+    <p id="time"></p>
         <div class="container-fluid margin">
             <div class="">
             <div class="row">
@@ -548,17 +555,20 @@ if ($result_top->num_rows > 0) {
 
 
                         <div class="top_prod">
-                            <h5 class="top_title">Top Selling Product</h5>
+                        <div class="row title-bar"> Top Selling Product
+                            
+                           as of <?php echo $current_datetime; ?>
+                           </div> 
                             <div class="crop-img"> <img class="top_image" src="data:image/jpeg;base64,<?php echo $image; ?>" alt=""></div>
                             <div class="prod_info">
                                 <p class="top_name">Name: <?php echo $top_name ?></p>
                                 <p class="top_price">Price: <?php echo $price ?></p>
-                            </div>
-
-                            <div class="sold">
                                 <h2>Sold: <?php echo $top_quantity ?></h2>
-                                <p class="asdate">As of <?php echo $current_datetime; ?></p>
-                                <p id="time"></p>
+                            </div>
+                           
+                            <div class="sold">
+                                
+                              
                             </div>
                         </div>
                         
@@ -628,7 +638,7 @@ if ($result_top->num_rows > 0) {
 
 
                         // Fetch data from database
-                        $sql_sales = "SELECT MONTHNAME(date) AS date, ROUND(SUM(totalprice), 2) AS totalprice
+                        $sql_sales = "SELECT MONTHNAME(date) AS datex, ROUND(SUM(totalprice), 2) AS totalprice
                         FROM overall_payment
                         GROUP BY MONTH(date)
                         ORDER BY MONTH(date);";
@@ -643,7 +653,7 @@ if ($result_top->num_rows > 0) {
                             // Loop through each row
                             while ($row_sales = $result_sales->fetch_assoc()) {
                                 // Store date and total price in arrays
-                                $date = $row_sales['date'];
+                                $date = $row_sales['datex'];
                                 if (!empty($date)) {
                                     $dateArray[] = $date;
                                     $totalpriceArray[] = $row_sales['totalprice'];
@@ -652,6 +662,7 @@ if ($result_top->num_rows > 0) {
                         }
 
                         // Encode arrays to JSON
+                    
                         $dateJSON = json_encode($dateArray);
                         $totalpriceJSON = json_encode($totalpriceArray);
                         ?>
@@ -722,6 +733,7 @@ if ($result_top->num_rows > 0) {
                 
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 ">
                     <div class="top_prod_comment">
+                        <h3 style="text-align: center; padding: 3%;">Customer Reviews</h3>
                         <?php 
                              $sql_comment = "SELECT * FROM feedback";
                              $result_comment = $connection->query($sql_comment);
@@ -742,7 +754,7 @@ if ($result_top->num_rows > 0) {
                                                 // Display full stars
                                                 $full_stars = floor($rating);
                                                 for ($i = 0; $i < $full_stars; $i++) {
-                                                    echo '<i class="fas fa-star"></i>';
+                                                    echo '<i class="fas fa-star" style="color: orange;"></i>';
                                                 }
                                                 
                                                 // Display half star if applicable
@@ -753,7 +765,7 @@ if ($result_top->num_rows > 0) {
                                                 
                                                 // If the decimal part is greater than 0.75, display an additional full star
                                                 if ($decimal_part > 0.75) {
-                                                    echo '<i class="fas fa-star"></i>';
+                                                    echo '<i class="fas fa-star" style="color: orange;"></i>';
                                                 }
                                             ?>
                                             </div>
