@@ -392,13 +392,16 @@ if (isset($_POST['logout'])) {
                             .top_prod{
                                 background-color: white;
                                 border-radius: 8px;
-                                border:1px solid #12171e;
+                                border:1px solid #fff;
+                                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
                                 height: 230px;
                             }
                             .top_prod_graph{
                                 background-color: white;
                                 border-radius: 8px;
-                                border:1px solid #12171e;
+                                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+                                border:1px solid #fff;
+
                                 height: 400px;
                             }
 
@@ -406,7 +409,8 @@ if (isset($_POST['logout'])) {
                                 background-color: white;
                                 color: black;
                                 border-radius: 8px;
-                                border:1px solid #12171e;
+                                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+                                border:1px solid #fff;
                                 height: 400px;
                                 overflow: auto;
                             }
