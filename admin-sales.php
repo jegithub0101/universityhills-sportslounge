@@ -375,7 +375,17 @@ if (isset($_POST['logout'])) {
     <div class="main-content">
         <div class="container-fluid">
             <div class="container">
-            <h1>Sales</h1>
+           <div class="row align-items-end">
+           <div class="col">
+           <h1>Sales</h1>
+           </div>
+            <div class="col text-end" style="padding-bottom: 10px;">
+                <button class="btn btn-primary" onclick="window.location.href='export-report.php'">Export Report to PDF</button>
+            </div>
+            
+           </div>
+            </div>
+           
                 <div class="row row_sales">
                     <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 ">
                        
@@ -405,7 +415,7 @@ if (isset($_POST['logout'])) {
 
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-6 col-xl-3 ">
-                        
+
                         <div class="today">
                         <div class="title">Weekly Total Sales</div>
                         <?php 
@@ -420,7 +430,7 @@ if (isset($_POST['logout'])) {
                                     while ($row_today = $result_today->fetch_assoc()) {
                                         ?>
                                         <div class="date"><?php echo $row_today['date']; ?></div>
-                                        <div class="sales">₱<?php echo $row_today['total_sales_today']; ?></div>
+                                        <div class="sales">₱<?php echo $row_today['total_sales_today'] ? $row_today['total_sales_today'] : 0; ?></div>
                                         <?php
                                     }
                                 }
