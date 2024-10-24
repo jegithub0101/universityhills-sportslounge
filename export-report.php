@@ -96,48 +96,52 @@ class PDF extends FPDF
         return $data;
     }
 
-
     function SalesTable($header, $data)
-{
-    // Determine column widths based on the number of columns
-    $w = array(); // Initialize column width array
-
-    // Set widths dynamically based on headers
-    switch (count($header)) {
-        case 2: // For two-column tables (Product report)
-            $w = array(80, 40); // Increase width for Product Name, reduce for Quantity Sold
-            break;
-        case 3: // For three-column tables (Sales report)
-            $w = array(80, 60, 30); // Increase width for Date/Product
-            break;
-        default:
-            echo "Invalid number of headers.";
-            return;
-    }
-
-    // Print the table headers
-    for ($i = 0; $i < count($header); $i++) {
-        $this->Cell($w[$i], 7, $header[$i], 1, 0, 'C');
-    }
-    $this->Ln(); // New line after header
-
-    // Print the data dynamically based on headers
-    foreach ($data as $row) {
-        if (isset($row['product_name']) && isset($row['qty'])) {
-            // Handle product report scenario
-            $this->Cell($w[0], 6, $row['product_name'], 1); // Wider product_name column
-            $this->Cell($w[1], 6, $row['qty'], 1, 0, 'C'); // Quantity column
-        } elseif (isset($row['date']) && isset($row['totalprice'])) {
-            // Handle sales report scenario
-            $this->Cell($w[0], 6, $row['date'], 1); // Wider date column
-            $this->Cell($w[1], 6, 'Php. ' . number_format($row['totalprice'], 2), 1);
-        } else {
-            echo "Data structure doesn't match expected format.";
-            return;
+    {
+        // Determine column widths based on the number of columns
+        $w = array(); // Initialize column width array
+    
+        // Set widths dynamically based on headers
+        switch (count($header)) {
+            case 2: // For two-column tables (Product or Sales report)
+                $w = array(80, 40); // Adjust width for headers like Month/Product, Quantity Sold/Total Sales
+                break;
+            case 3: // For three-column tables
+                $w = array(80, 60, 30); // Adjust width for Date/Product
+                break;
+            default:
+                echo "Invalid number of headers.";
+                return;
         }
-        $this->Ln(); // New line after each row
+    
+        // Print the table headers
+        for ($i = 0; $i < count($header); $i++) {
+            $this->Cell($w[$i], 7, $header[$i], 1, 0, 'C');
+        }
+        $this->Ln(); // New line after header
+    
+        // Print the data dynamically based on headers
+        foreach ($data as $row) {
+         //   print_r($row);
+            // Check for product report (Product Name and Quantity)
+            if (isset($row['product_name']) && isset($row['qty'])) {
+                $this->Cell($w[0], 6, $row['product_name'], 1); // Product Name column
+                $this->Cell($w[1], 6, $row['qty'], 1, 0, 'C'); // Quantity column
+            }
+            // Check for sales report (Date and Total Price)
+            elseif (isset($row['date']) && isset($row['totalprice'])) {
+                $this->Cell($w[0], 6, $row['date'], 1); // Date column
+                $this->Cell($w[1], 6, 'Php. ' . number_format($row['totalprice'], 2), 1); // Total Sales column
+            }
+            // If neither case matches, return an error
+            else {
+               // skip
+                continue;
+            }
+            $this->Ln(); // New line after each row
+        }
     }
-}
+    
 
 
     
@@ -181,7 +185,8 @@ $pdf->SetFont('Arial', '', 12);
 $sql_product = "SELECT product_name as product_name, SUM(quantity) as qty  
                 FROM product_payment
                 GROUP BY product_name
-                ORDER BY SUM(quantity) DESC";
+                ORDER BY SUM(quantity) DESC 
+                LIMIT 5";
 $product_data = $pdf->LoadData($sql_product);
 $pdf->SalesTable(['Product', 'Quantity Sold'], $product_data);
 
