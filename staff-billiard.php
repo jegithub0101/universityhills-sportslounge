@@ -165,7 +165,7 @@ $queueResult = $conn->query($queueSql);
     
     <div class="main-content">
         <div class="container-fluid">
-            <h2 class="text-center">Billiard</h2>
+            <h2 class="text-center">Billiard  </h2>
                 <div id="link_wrapper">
 
 

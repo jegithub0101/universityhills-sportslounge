@@ -233,6 +233,10 @@ function getOrderStatusCounts($connection, $cid, $tracking) {
                 grid-template-columns: 1fr;
                 padding: 1rem;
             }
+            .order-header{
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
 
         
