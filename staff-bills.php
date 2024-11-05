@@ -1,11 +1,11 @@
 <?php
 
 session_start();
+
 $servername = "localhost";
 $username = "root";
 $password = "";
 $database = "university_hills";
-
 //Create Connection
 $connection = mysqli_connect($servername, $username, $password, $database);
 
@@ -37,6 +37,8 @@ if (isset($_POST['logout'])) {
 }
 
 
+
+
 ?>
 
 <!DOCTYPE html>
@@ -48,7 +50,6 @@ if (isset($_POST['logout'])) {
     <link rel="icon" href="Pic/uhicon.png" type="image/x-icon" />
     <link rel="stylesheet" href="bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css">
     <script src="bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -56,8 +57,10 @@ if (isset($_POST['logout'])) {
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-straight/css/uicons-bold-straight.css'>
     <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="icon" href="Pic/logo.svg" type="image/x-icon">
     <style>
         
 
@@ -72,31 +75,8 @@ if (isset($_POST['logout'])) {
             padding: 1rem;
             height: 100vh;
         }
-        .navbar{
-            display:none
-        }
-
-
-        @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-
-        }
-
-           
-            
+       
+        
         .main-content{
             height: 100vh;
             overflow-x: hidden;
@@ -107,7 +87,9 @@ if (isset($_POST['logout'])) {
         h3{
             text-align: center;
         }
-
+        .conn{
+            margin-left: 3%;
+        }
 
         .cards{
             background-color: white;
@@ -232,8 +214,6 @@ if (isset($_POST['logout'])) {
         }
         .billtable{
             margin-bottom: 50px;
-            max-width: 500px;
-            min-width: 500px;
         }
         .btnpay{
             background-color: #12171e;
@@ -242,243 +222,47 @@ if (isset($_POST['logout'])) {
             font-size: 15pt;
         }
         
-        @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-            .navbar-toggler{
-                height: 30px;
-                padding-top: 0px;
-            }
-            .navbar-toggler-icon{
-                font-size: 8pt;
-                margin-top: 0px;
-            }
-        }
-
-        @media only screen and (max-width: 1109px) {
-            .billtable{
-            margin-bottom: 50px;
-            max-width: 700px;
-            min-width: 700px;
-            margin-left:12%;
-        }
-        }
-        @media only screen and (max-width: 878px) {
-            .billtable{
-            margin-bottom: 50px;
-            max-width: 700px;
-            min-width: 700px;
-            margin-left:3%;
-        }
-        }
-
-        @media only screen and (max-width: 768px) {
-            .billtable{
-            margin-bottom: 50px;
-            max-width: 600px;
-            min-width: 600px;
-            margin-left:3%;
-        }
-        }
-        @media only screen and (max-width: 669px) {
-            .billtable{
-            
-            max-width: 500px;
-            min-width: 500px;
-            margin-left:3%;
-        }
-        }
-        @media only screen and (max-width: 557px) {
-            .billtable{
-            
-            max-width: 450px;
-            min-width: 450px;
-            margin-left:0%;
-        }
-        }
-        @media only screen and (max-width: 480px) {
-            .billtable{
-            
-            max-width: 400px;
-            min-width: 400px;
-            margin-left:0%;
-        }.main-content{
-            {
-                padding-left:0%;
-            }
-        }
-        }
-        @media only screen and (max-width: 423px) {
-            .billtable{
-            max-width: 360px;
-            min-width: 360px;
-            margin-left:0%;
-        }
-        
-    }
-    @media only screen and (max-width: 400px) {
-            .billtable{
     
-            margin-left:0%;
+            .emptyword{
+            font-size: 40pt;
+            text-align: center;
         }
-    }
+        #noResults {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%; /* Adjust as needed */
+            text-align: center;
+            padding: 20px;
+        }
+
+        .emptypic {
+            width: 30%;
+            margin: 0 auto;
+            display: block;
+        }
+
+        @media only screen and (max-width: 992px) {
+            .emptyword {
+                font-size: 30pt;
+            }
+            .emptypic {
+                width: 90%;
+                margin: 0 auto;
+            }
+
+        }
 
     </style>
 
 </head>
 <body>
-
-
-    <nav class="navbar navbar-dark bg-dark fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">UH STAFF</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li class="nav-item">
-                    <a class="nav-link "  href="staff-orders.php">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="staff-bills.php">Bills</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="staff-billiard.php">Billiards</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="staff-song.php">Song</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="staff-assist.php">Assist</a>
-                </li>
-
-                <li class="nav-item">
-                <a class="nav-link" href="staff-concern.php">Customer's Concerns</a>
-                </li>
-
-                <style>
-                .navlogout{
-                    
-                    width:20%;
-                    background-color: white;
-                    color: black;
-                    border-radius: 10px;
-                }
-            </style>
-
-            <div class="lii">
-                <form action="" method="post" onsubmit="return confirmLogout()">
-                    <button type="submit" name="logout" class="logout-button navlogout">
-                        <i class='bx bx-log-out'></i>
-                    </button>
-                </form>
-            </div>
-            </ul>
-        </div>
-    </div>
-    </nav>
-
     
-    <div class="sidebar">
-        <div class="top">
-            <i class="bx bx-menu" id="btn"></i>
-        </div>
+    <?php   
+        require 'staff-sidebar.php';
+    ?>
         
-        <div class="user">
-            <img src="Pic/logo.png" alt="me" class="user-img">
-            <div class="logo">
-                <span>University Hills</span>
-            </div>
-            <div>
-                <p class="bold">Welcome, Staff!</p>
-            </div>
-        </div>
-                
-            <div class="lii">
-                <a href="staff-orders.php">
-                <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="nav-item">Orders</span>
-                </a>
-                <span class="tooltip">Orders</span>
-            </div>
-
-            <div class="lii">
-                <a href="staff-bills.php">
-                <i class="fa-solid fa-money-check-dollar"></i>
-                    <span class="nav-item">Bills</span>
-                </a>
-                <span class="tooltip">Bills</span>
-            </div>
-
-            <div class="lii">
-                <a href="staff-billiard.php">
-                <i class="fa-solid fa-bowling-ball"></i>
-                    <span class="nav-item">Billiard</span>
-                </a>
-                <span class="tooltip">Billiard</span>
-            </div>
-
-            <div class="lii">
-                <a href="staff-song.php">
-                <i class="fa-solid fa-music"></i>
-                    <span class="nav-item">Song</span>
-                </a>
-                <span class="tooltip">Song Request</span>
-            </div>
-
-            <div class="lii">
-                <a href="staff-assist.php">
-                <i class="fa-solid fa-hands-helping"></i>
-                    <span class="nav-item">Assist</span>
-                </a>
-                <span class="tooltip">Staff-Assist </span>
-            </div>
-
-            <div class="lii">
-                <a href="staff-concern.php">
-                <i class="fa-solid fa-exclamation-triangle"></i>
-                    <span class="nav-item">Concerns</span>
-                </a>
-                <span class="tooltip">Customer's Concerns</span>
-            </div>
-
-            
-                  
-            <div class="lii">
-            <form action="" method="post" onsubmit="return confirmLogout()">
-                <button type="submit" name="logout" class="logout-button">
-                <i class='bx bx-log-out'></i>
-                </button>
-            </form>
-            <span class="tooltip">Logout</span>
-            </div>
-
-    </div>
-
-    <script>
-            function confirmLogout() {
-            return confirm("Are you sure you want to log out?");
-            }
-            </script>
     <div class="main-content">
         <div class="container-fluid">
             <h1>Bills</h1>
@@ -490,14 +274,16 @@ if (isset($_POST['logout'])) {
                 
                 // Loop through each tracking number
                 while ($row_bill_table = $result_bill_table->fetch_assoc()) {
-                    $bill_table =  $row_bill_table['table_number'];
+                    $bill_table =  $row_bill_table['table_number']; // table number
                     $k = 0;
+                    $_SESSION['distinct_cid_count'] = $k;
                     
                 ?>
                 <div class="col-sm-12 col-md-10 col-lg-4 col-xl-4 billtable">
                     <div class="tableno "><?php echo $bill_table; ?></div>
                     <div class="cards">
                     <?php
+                        //getting the cid from admin_order/customer id
                         $sql_monitor_cid = "SELECT DISTINCT cid FROM admin_order WHERE table_number = $bill_table AND status = 'Request'";
                         $result_monitor_cid = $connection->query($sql_monitor_cid);
 
@@ -511,11 +297,13 @@ if (isset($_POST['logout'])) {
                             while ($row_cid = $result_monitor_cid->fetch_assoc()) {
                                 $cid_user = $row_cid['cid'];
 
+                                // getting the nickname of the customer using cid
                                 $sql_monitor_name = "SELECT nickname FROM customer WHERE cid=$cid_user";
                                 $result_monitor_name = $connection->query($sql_monitor_name);
                                 $row_monitor_name = $result_monitor_name->fetch_assoc();
 
                                  $k += 1;
+                                 $_SESSION['distinct_cid_count'] = $k;
 
                                 //echo $cid_user;
                                 ?>
@@ -526,18 +314,20 @@ if (isset($_POST['logout'])) {
                                             <input type="hidden" id="name_<?php echo $bill_table. $k  ?>" name="name_<?php echo $bill_table. $k  ?>"  value="<?php echo $row_monitor_name['nickname']; ?>">
                                         </p>
                                     </div>
-                                    <div class="">
-                                        <input type="checkbox" onclick="updateValidIdCount('<?php echo $bill_table; ?>')" class="validid" id="validid_<?php echo $bill_table. $k  ?>" name="validid_<?php echo $bill_table. $k  ?>" data-user-id="<?php echo $user['cid']; ?>" value="validid">
-                                        <label for="validid_<?php echo $bill_table. $k  ?>"> valid id</label><br>
+                                    <div class="chbox">
+                                        <!--it is the checkbox if the pwd discount is applied-->
+                                        <input type="checkbox"  onclick="updateValidIdCount('<?php echo $bill_table; ?>')" class="validid" id="validid_<?php echo $bill_table. $k  ?>" name="validid_<?php echo $bill_table. $k  ?>" data-user-id="<?php echo $user['cid']; ?>" value="validid">
+                                        <label for="validid_<?php echo $bill_table. $k  ?>">  valid id</label><br>
                                         <input type="hidden" class="isvalid_<?php echo $bill_table. $k  ?>" value="">
                                     </div>
                                 </div>
 
+                                <!--this is the orders of each person within that table-->
                                 <div class="containeritem d-flex bd-highlight">
-                                    <div class="prodnameh flex-fill bd-highlight"> NAME </div>
+                                    <div class="prodnameh flex-fill bd-highlight"> Name </div>
                                     <div class="pquantityh flex-fill bd-highlight"> QTY </div>
-                                    <div class="ppriceh flex-fill bd-highlight">PRICE</div>
-                                    <div class="pstotalh flex-fill bd-highlight">SUBTOTAL</div>
+                                    <div class="ppriceh flex-fill bd-highlight">Price</div>
+                                    <div class="pstotalh flex-fill bd-highlight">Subtotal</div>
                                 </div>
 
                                 <?php
@@ -613,6 +403,7 @@ if (isset($_POST['logout'])) {
                                     echo "NO ORDERS AT THE MOMENT";
                                 }
                                 ?>
+                                 <!--this is the amount per customer-->
                                     <h3 class="useramt"> 
                                         Amount: <span> <?php //echo $total_user; ?> </span>
                                         <input type="text" readonly id="usertotal_<?php echo $bill_table. $k  ?>" name="usertotal_<?php echo $bill_table. $k  ?>"  value="<?php echo $total_user; ?>">
@@ -654,22 +445,172 @@ if (isset($_POST['logout'])) {
                     ?>
                     </div>
       
-                    
+                    <!--it is the total overll_amount of all the customers within that table-->
                     <div class="totalamt">
                         <p id="overalltotal_<?php echo $bill_table;  ?>" name = "overalltotal_<?php echo $bill_table; ?>">Total Amount: </p><!--Overall total amout per table-->
                         <input type="hidden" name="inputoveralltotal_<?php echo $bill_table;  ?>" id="inputoveralltotal_<?php echo $bill_table;  ?>"> 
                         <input type="hidden" name="countvalidid_<?php echo $bill_table;  ?>" id="countvalidid_<?php echo $bill_table;  ?>" value="0">
-                        <button class="btn btn-primary w-100 btnpay" id="btnpay" name="btnpay">Done</button></div>  
-                    </div>
-                 <?php
-                
-                }
-            }
-            ?>
-            </div>
-        </div>
-    </div>
+                    <!-- Update the buttons with IDs -->
+                    <button class="btn btn-primary w-100 btnpay" id="doneButton" name="btnpay">Done</button>
+                    <button class="btn btn-secondary w-100" id="printButton" onclick="printBill('<?php echo $bill_table; ?>')">Print Bill</button>
+                </div>
+<?php
+    }
+}
+else{
+    echo "<p class='emptyword'></p>";
+    echo " <img class='emptypic' src='Pic/emptybill.svg' alt=''>";
+}
+?>
+</div>
+</div>
+</div>
 </body>
+
+<!-- JavaScript part -->
+<script>
+    // Function to preview and print the bill
+    function printBill(tableNumber) {
+        // Hide the "Done" and "Print" buttons during print
+        document.getElementById('doneButton').style.display = 'none';
+        document.getElementById('printButton').style.display = 'none';
+
+        // Get the updated total amount from the DOM
+        let overallTotal = document.getElementById('overalltotal_' + tableNumber).textContent;
+
+        // Get the content of the bill table (it may have updated amounts or other dynamic content)
+        let printContent = document.querySelector('.billtable').innerHTML;
+
+        // Remove unwanted parts from the print content
+        printContent = printContent.replace(/<div>valid id<\/div>/, ''); // Remove valid ID
+        printContent = printContent.replace(/<div>\d+<\/div>/, ''); // Remove the line with the table number (e.g., "2")
+
+        // Open a new window for printing
+        let printWindow = window.open('', '', 'width=800,height=600');
+        
+        // Get current date and time in Manila/PH timezone and format it
+        let options = { timeZone: 'Asia/Manila', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+        let date = new Intl.DateTimeFormat('en-US', options).format(new Date());
+        
+
+        printWindow.document.write('<html><head><title>Print Bill</title>');
+        printWindow.document.write(`
+           <style>
+    body { 
+        font-family: 'Courier New', monospace; 
+        font-size: 12px; /* Reduced font size to fit better on smaller receipts */
+    }
+    
+    .receipt {
+        padding: 10px; /* Reduce padding to maximize content space */
+        max-width: 100%; /* Fit to thermal receipt paper width */
+        margin: auto;
+        border: none; /* Remove border for clean thermal printing */
+        box-shadow: none; /* Remove shadow for printing */
+    }
+
+    .receipt-header, .receipt-footer {
+        text-align: center;
+        margin-bottom: 10px; /* Reduced margin for compactness */
+    }
+
+    .receipt-header h2 {
+        margin: 0;
+        font-size: 14px; /* Reduced font size for headers */
+    }
+
+    .receipt-header p, .receipt-footer p {
+        margin: 3px 0; /* Reduce vertical spacing */
+    }
+
+    .bill-items {
+        margin-bottom: 5px;
+        border-bottom: 1px dashed black;
+        padding-bottom: 5px;
+    }
+
+    .bill-items th, .bill-items td {
+        padding: 2px; /* Reduced padding for more space */
+        text-align: left;
+        font-size: 12px; /* Keep font size consistent */
+    }
+
+    /* Adjusting total display for small receipt */
+    .total {
+        text-align: left;
+        font-weight: bold;
+        margin-top: 5px; /* Reduced margin */
+    }
+
+    .totalamt {
+        font-weight: bold;
+        text-align: right;
+    }
+
+    /* Hide elements not needed for receipt */
+    .tableno, .useramt, .chbox {
+        display: none;
+    }
+
+    /* Ensure flexbox layout for items is compact */
+    .containeritem {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        font-size: 12px;
+    }
+
+    .prodnameh, .prodstatush, .pquantityh, .ppriceh, .pstotalh {
+        font-weight: bold;
+        text-align: left;
+        flex: 1;
+        padding-right: 5px; /* Reduced padding for compactness */
+    }
+
+    .prodname, .prodstatus, .pquantity, .pprice, .pstotal {
+        text-align: left;
+        flex: 1;
+        padding-right: 5px;
+    }
+
+    /* Adjust footer for thermal printing */
+    .receipt-footer {
+        margin-top: 10px;
+        font-size: 11px; /* Slightly smaller footer text */
+    }
+</style>
+
+
+        `);
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(`
+            <div class="receipt">
+                <div class="receipt-header">
+                    <h2>UNIVERSITY HILLS <br>SPORTS LOUNGE</h2>
+                    <p>2nd Floor, Unicenter Building<br>100 Samson Rd., Corner Caimito St.
+                    <br>University Hills, Caloocan City</p>
+                     <p>-----------------------------------<p>
+                    <p>${date}</p> <!-- Date and time -->
+                    <p>-----------------------------------<p>
+                </div>
+                <div class="tableNum">Table No: ${tableNumber}</div>
+                ${printContent}
+                
+                <div class="receipt-footer">
+                     <p>-----------------------------------<p>
+                    <p>Thank you for dining with us!<br>This serves as your official receipt.</p>
+                </div>
+            </div>
+        `);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+
+        // Show the "Done" and "Print" buttons again after printing
+        document.getElementById('doneButton').style.display = 'block';
+        document.getElementById('printButton').style.display = 'block';
+    }
+</script>
 
 
 <script>

@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -11,7 +10,7 @@ $database = "university_hills";
 $connection = mysqli_connect($servername, $username, $password, $database);
 
 // Check connection
-if($connection->connect_error){
+if ($connection->connect_error) {
     die("Connection failed: " . $connection->connect_error);
 }
 
@@ -29,17 +28,60 @@ if (isbillout()) {
     exit;
 }
 
-
-function isLoggedIn()
-{
-    return isset($_SESSION['table_number'] );
+// Check if the user is logged in
+function isLoggedIn() {
+    return isset($_SESSION['table_number']);
 }
 
 // Redirect to login page if not logged in
 if (!isLoggedIn()) {
+    session_unset();
+    session_destroy();
     header("Location: client-login.php");
     exit;
 }
+
+$table_number = $_SESSION['table_number'];
+$table_name = $_SESSION['table_name'];
+
+// Adjust this query according to your actual table structure
+$sql_active = "SELECT active FROM customer WHERE table_number = $table_number AND nickname = '$table_name'";
+$result_active = $connection->query($sql_active);
+
+if ($result_active->num_rows > 0) {
+    $row_active = $result_active->fetch_assoc();
+    
+    // Debugging output to check the value of active
+    error_log("Active value for table number $table_number: " . $row_active['active']);
+
+    // Check if active field is true (1) or not
+    if ($row_active['active'] !== 'trues') { // Ensure you're comparing with an integer
+        session_unset();
+        session_destroy();
+
+        session_start();
+        $_SESSION['billout'] = true;
+        $_SESSION['table_name'] = $table_name;
+
+        header("Location: client-comment.php");
+        
+        exit;
+    }
+} else {
+    // If no customer found, destroy session and redirect
+    session_unset();
+    session_destroy();
+    session_start();
+    $_SESSION['billout'] = true;
+    $_SESSION['table_name'] = $table_name;
+    header("Location: client-comment.php");
+    exit;
+}
+
+$_SESSION['billout'] = true;
+
+// Your existing code to run the system goes here
+
 
 ?>
 
@@ -49,7 +91,6 @@ if (!isLoggedIn()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Products | University Hills</title>
-    <link rel="icon" href="Pic/uhicon.png" type="image/x-icon" />
     <link rel="stylesheet" href="bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css">
     <script src="bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js"></script>
 
@@ -63,10 +104,14 @@ if (!isLoggedIn()) {
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
+    <link rel="icon" href="Pic/logo.svg" type="image/x-icon">
     <link rel="stylesheet" href="css/sidebar.css">
 
     <style>
+
+        *{
+            font-family: Arial, sans-serif;
+        }
         .main-content{
             height: 100vh;
             overflow-x: hidden;
@@ -81,13 +126,9 @@ if (!isLoggedIn()) {
     </style>
 
     <style>
-        .nickname{
-            border-bottom: 2px solid white;
-            margin-bottom: 3%;
-            padding-left: 25%;
-            padding-right: 5%;
-            padding-bottom: 12%;
-        }
+
+
+
         .inputsong{
             width: 30%;
             float: left;
@@ -97,6 +138,9 @@ if (!isLoggedIn()) {
         #songform{
             margin-top: 15px;
             margin-bottom: 0px;
+        }
+        #songform>.divsong{
+            margin-left: 12%;
         }
         #songform{
             display: none;
@@ -109,38 +153,9 @@ if (!isLoggedIn()) {
             margin-left: 1%;
             margin-top: 10px;
         }
-        .navbar{
-            display:none
-        }
-
-        
-
 
         @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            padding-left: 0%;
-           
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-            .navbar-toggler{
-                height: 30px;
-                padding-top: 0px;
-            }
-            .navbar-toggler-icon{
-                font-size: 8pt;
-                margin-top: 0px;
-            }
+            
             .inputsong{
                 width: 70%;
                 margin-right:1%;
@@ -225,126 +240,92 @@ if (!isLoggedIn()) {
             }
 
 
+                /* General Navigation Tabs Styling */
+            .nav-tabs {
+                border-bottom: none;
+                justify-content: center;
+                background-color: #343a40; /* Dark background for the tab area */
+                padding: 10px;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                display: flex;
+                flex-wrap: wrap;
+                width: 95%;
+            }
+
+            .nav-link {
+                color: #f8f9fa; /* White text for inactive tabs */
+                font-weight: 600;
+                font-size: 16px;
+                padding: 12px 20px;
+                margin: 0 10px;
+                border: none;
+                background-color: #6c757d; /* Gray background for inactive tabs */
+                border-radius: 30px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                white-space: nowrap; /* Prevents text from wrapping */
+            }
+
+            .nav-link:hover {
+                background-color: #495057; /* Darker gray for hover */
+                color: #ffffff; /* Bright white for hover state */
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow on hover */
+            }
+
+            .nav-link.active {
+                background-color: #212529; /* Darker for the active tab */
+                color: #ffffff; /* White text for active tab */
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Stronger shadow for active */
+            }
+
+            .nav-link:focus {
+                outline: none;
+            }
+
+            .tab {
+                cursor: pointer;
+            }
+
+            /* Responsive Design for Mobile Devices */
+            @media (max-width: 768px) {
+                .nav-tabs {
+                    flex-direction: column;
+                    align-items: stretch; /* Make tabs stretch across the screen */
+                }
+
+                .nav-link {
+                    width: 100%; /* Full-width tabs */
+                    text-align: center; /* Center-align text */
+                    margin: 5px 0; /* Add space between vertical tabs */
+                    font-size: 18px; /* Increase font size for easier tapping */
+                    padding: 15px; /* Larger tap area for mobile */
+                }
+            }
+
+            /* Responsive Design for Extra Small Screens */
+            @media (max-width: 480px) {
+                .nav-link {
+                    font-size: 16px; /* Slightly smaller font for very small screens */
+                    padding: 12px; /* Adjust padding for smaller devices */
+                }
+            }
+
+
+
     </style>
 
 </head>
 <body>
 
-
-    <nav class="navbar navbar-dark bg-dark fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">University Hills Sport Lounge</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="client-product.php">Client Panel</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="client-cart.php">My Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="client-order.php">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link "  href="client-concern.php">Report Concern</a>
-                </li>
-                
-            </ul>
-        </div>
-        </div>
-    </div>
-    </nav>
-
-
-    <div class="sidebar">
-        <div class="top">
-            <i class="bx bx-menu" id="btn"></i>
-            
-        </div>
-        <div class="user">
-            <img src="Pic/logo.png" alt="me" class="user-img">
-            <div class="logo">
-                <span>University Hills</span>
-            </div>
-            <div>
-                <p class="bold">Welcome, Table <?php echo $_SESSION['table_number']; ?></p>
-                <p class="nickname"> <?php echo $_SESSION['table_name']; ?></p>
-            </div>
-        </div>
-                
-            <div class="lii">
-                <a href="client-product.php">
-                        <i class="bx bxs-shopping-bag"></i>
-                        <span class="nav-item">Order</span>
-                </a>
-                <span class="tooltip">Order</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-cart.php">
-                <i class="fa-solid fa-cart-plus"></i>
-                    <span class="nav-item">Cart</span>
-                </a>
-                <span class="tooltip">Your Cart</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-order.php">
-                <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="nav-item">Orders</span>
-                </a>
-                <span class="tooltip">Orders</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-concern.php">
-                <i class="fa-solid fa-exclamation-triangle"></i>
-                    <span class="nav-item">Concern</span>
-                </a>
-                <span class="tooltip">Submit Concern</span>
-            </div>
-            
-            <?php
-            function isAssist()
-            {
-                return isset($_SESSION['staff_access'] );
-            }
-
-            if (isAssist()) {
-                ?>
-                <div class="lii">
-                    <a href="staff-assist.php">
-                        <i class="fa-solid fa-hands-helping"></i>
-                        <span class="nav-item">Assist</span>
-                    </a>
-                    <span class="tooltip">Staff-Assist </span>
-                </div>
-                <?php
-            }
-            ?>
-
-                
-
-
-    </div>
-  
+    <?php
+        require 'client-sidebar.php';
+    ?>
     <div class="main-content">
         <div class="container-fluid">
 
-
-        
-
         <?php
-
-
         // Check if the order add button is clicked
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['orderBtn'])) {
             $pid = $_POST['pid'];
@@ -459,17 +440,6 @@ if (!isLoggedIn()) {
 </body>
 
 
- <script>
-   function populateorder(productId, productName, price,stock) {
-                // Populate values in the modal form
-                document.getElementById('pid').value = productId;
-                document.getElementById('pname').value = productName;
-                document.getElementById('pprice').value = price;
-                document.getElementById('pstock').value = stock;
-        }
- </script>
-
-
 <script>
     let btn = document.querySelector('#btn');
     let sidebar = document.querySelector('.sidebar');
@@ -499,8 +469,11 @@ if (!isLoggedIn()) {
 </script>
 
 
+
+
 <script>
     
+    //--- DITO LUMALABAS YUNG INDEX
     var intervalId; 
     function loadContent(filename, button) {
         // Clear previous interval
@@ -513,17 +486,17 @@ if (!isLoggedIn()) {
         if (button.innerText === "Foods") {
             intervalId = setInterval(function() {
                 loadXMLDoc('client-product-food.php');
-            }, 1000);
+            }, 10000);
         }
         else if (button.innerText === "Drinks") {
             intervalId = setInterval(function() {
                 loadXMLDoc('client-product-drinks.php');
-            }, 1000);
+            }, 10000);
         }
         else if (button.innerText === "Others") {
             intervalId = setInterval(function() {
                 loadXMLDoc('client-product-others.php');
-            }, 1000);
+            }, 10000);
         }
 
        
@@ -539,6 +512,8 @@ if (!isLoggedIn()) {
         }
     }
 
+    
+
     function loadXMLDoc(filename) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -553,16 +528,11 @@ if (!isLoggedIn()) {
 
     // On page load
     window.onload = function() {
-            var lastClickedButtonId = localStorage.getItem('lastClickedButtonId'); // Retrieve the ID of the last clicked button from local storage
-            var lastClickedButton = document.getElementById(lastClickedButtonId); // Get the button element using its ID
-            if (lastClickedButton) {
-                // If a last clicked button exists, load its content
-                loadContent(lastClickedButton.getAttribute('data-filename'), lastClickedButton);
-            } else {
-                // If no last clicked button exists, load default content
-                loadContent('client-product-food.php', document.getElementById('food'));
-            }
+            // If no last clicked button exists, load default content
+            loadContent('client-product-food.php', document.getElementById('food'));
         };
+
+    //------------------------------------
 </script>
 
 
@@ -606,55 +576,82 @@ if (!isLoggedIn()) {
 
 
 <script>
-     // Function to reserve a pool table
-     function reservePoolTable() {
-            var confirmReserve = confirm("Are you sure you want to reserve a pool table?");
-            if (confirmReserve) {
-                // Send AJAX request to reserve pool
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "client-billiard-reserve.php", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        // Handle response
-                        alert(xhr.responseText);
-                        // Refresh the page to update the reservation table and queue list
-                        location.reload();
-                    }
-                };
-                xhr.send();
-            }
+    function reservePoolTable() {
+    $.ajax({
+        url: "client-billiard-reserve.php", // The PHP file handling the reservation
+        type: "POST",
+        data: {
+            table_number: $("#table_number").val() // Assuming you have table number input
+        },
+        success: function(response) {
+            alert(response); // Notify user about reservation status
+            // Optionally, you could refresh only the reservation section instead of the whole page
+            $('#billiard-tab').trigger('click'); // Keeps the user on the Billiard Reservation tab
+        },
+        error: function(xhr, status, error) {
+            alert("Error: " + error); // Error handling
         }
+    });
+}
 
-        // Add event listener to reserve button
-        document.getElementById("reserve-btn").addEventListener("click", reservePoolTable);
 </script>
+
 
 
 <script>
     // Function to cancel a reservation
-    function cancelReservation(queueId) {
-        var confirmCancel = confirm("Are you sure you want to cancel this reservation?");
-        if (confirmCancel) {
-            // Send AJAX request to cancel reservation
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "cancel-reservation.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Handle response
-                    alert(xhr.responseText);
-                    // Refresh the page to update the queue list
-                    location.reload();
-                }
-            };
-            // Send queue_id and table_number in the request data
-            var formData = "queue_id=" + queueId;
-            xhr.send(formData);
-        }
+    // Function to cancel a reservation
+function cancelReservation(queueId) {
+    var confirmCancel = confirm("Are you sure you want to cancel this reservation?");
+    if (confirmCancel) {
+        $.ajax({
+            url: "cancel-reservation.php", // The PHP file handling cancellation
+            type: "POST",
+            data: {
+                queue_id: queueId // Sending queue ID to cancel the reservation
+            },
+            success: function(response) {
+                alert(response); // Notify user about the cancellation status
+                // Optionally, you could refresh only the reservation section instead of the whole page
+                $('#billiard-tab').trigger('click'); // Keeps the user on the Billiard Reservation tab
+            },
+            error: function(xhr, status, error) {
+                alert("Error: " + error); // Error handling
+            }
+        });
     }
+}
 
 </script>
 
+
+<!-- Include jQuery for AJAX -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+function addToCart(pid) {
+    // Get the form data
+    var formData = $('#foodform_' + pid).serialize();
+
+    // Perform AJAX request
+    $.ajax({
+        type: 'POST',
+        url: 'handle_add_to_cart.php',  // This is the file handling the cart addition
+        data: formData,
+        success: function(response) {
+            var res = JSON.parse(response);
+            if (res.status === "success") {
+                // Update button text and disable it
+                $('#foodform_' + pid + ' .orderBtn').html('Added').prop('disabled', true).css('background-color', 'gray');
+                $('#response_' + pid).html('<span style="color:green;">' + res.message + '</span>');
+            } else {
+                $('#response_' + pid).html('<span style="color:red;">' + res.message + '</span>');
+            }
+        },
+        error: function() {
+            $('#response_' + pid).html('<span style="color:red;">An error occurred.</span>');
+        }
+    });
+}
+</script>
 
 </html>

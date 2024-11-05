@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 $servername = "localhost";
@@ -7,14 +6,13 @@ $username = "root";
 $password = "";
 $database = "university_hills";
 
-//Create Connection
+// Create Connection
 $connection = mysqli_connect($servername, $username, $password, $database);
 
 // Check connection
 if ($connection->connect_error) {
     die("Connection failed: " . $connection->connect_error);
 }
-
 
 function isbillout()
 {
@@ -30,24 +28,63 @@ if (isbillout()) {
     exit;
 }
 
-function isLoggedIn()
-{
-    return isset($_SESSION['table_number'] );
+// Check if the user is logged in
+function isLoggedIn() {
+    return isset($_SESSION['table_number']);
 }
 
 // Redirect to login page if not logged in
 if (!isLoggedIn()) {
-     // Unset all session variables
-     session_unset();
-
-     // Destroy the session
-     session_destroy();
- 
-     // Redirect to login page or wherever you want
-     header("Location:client-login.php");
+    session_unset();
+    session_destroy();
+    header("Location: client-login.php");
+    exit;
 }
 
+$table_number = $_SESSION['table_number'];
+$table_name = $_SESSION['table_name'];
+
+// Adjust this query according to your actual table structure
+$sql_active = "SELECT active FROM customer WHERE table_number = $table_number AND nickname = '$table_name'";
+$result_active = $connection->query($sql_active);
+
+if ($result_active->num_rows > 0) {
+    $row_active = $result_active->fetch_assoc();
+    
+    // Debugging output to check the value of active
+    error_log("Active value for table number $table_number: " . $row_active['active']);
+
+    // Check if active field is true (1) or not
+    if ($row_active['active'] !== 'trues') { // Ensure you're comparing with an integer
+        session_unset();
+        session_destroy();
+
+        session_start();
+        $_SESSION['billout'] = true;
+        $_SESSION['table_name'] = $table_name;
+        header("Location: client-comment.php");
+        
+        exit;
+    }
+   
+} else {
+    // If no customer found, destroy session and redirect
+    session_unset();
+    session_destroy();
+    session_start();
+    $_SESSION['billout'] = true;
+    $_SESSION['table_name'] = $table_name;
+    header("Location: client-comment.php");
+    exit;
+}
+
+$_SESSION['billout'] = true;
+
+// Your existing code to run the system goes here
+
+
 ?>
+
 
 
 
@@ -71,24 +108,23 @@ if (!isLoggedIn()) {
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link rel="icon" href="Pic/logo.svg" type="image/x-icon">
     <link rel="stylesheet" href="css/sidebar.css">
 
     <style>
         
-        .navbar{
-            display:none
-        }
         .prodimg{
             max-width: 120px;
         }
-        /*
+        
         .main-content{
             height: 100vh;
             overflow-x: hidden;
             padding-left: 1%;
             padding-right: 1%;
-        }
+        } 
+
+        /*
         .whitcontainer{
                 
                 margin-left: 0%;
@@ -125,42 +161,31 @@ if (!isLoggedIn()) {
             font-size: 40pt;
             text-align: center;
         }
-        .emptypic{
+        #noResults {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%; /* Adjust as needed */
+            text-align: center;
+            padding: 20px;
+        }
+
+        .emptypic {
             width: 30%;
-            margin-left:35%;
+            margin: 0 auto;
+            display: block;
         }
 
         @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-            .navbar-toggler{
-                height: 30px;
-                padding-top: 0px;
-            }
-            .navbar-toggler-icon{
-                font-size: 8pt;
-                margin-top: 0px;
-            }
-            .emptyword{
+            .emptyword {
                 font-size: 30pt;
             }
-            .emptypic{
+            .emptypic {
                 width: 90%;
-                margin-left: 5%;
+                margin: 0 auto;
             }
-            
+
 
         }
         @media (max-width: 732px) {
@@ -234,111 +259,9 @@ if (!isLoggedIn()) {
 
 </head>
 <body>
-
-
-<nav class="navbar navbar-dark bg-dark fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">University Hills Sport Lounge</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li class="nav-item">
-                    <a class="nav-link" href="client-product.php">Client Panel</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="client-cart.php">My Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="client-order.php">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="client-concern.php">Report Concern</a>
-                </li>
-                
-            </ul>
-        </div>
-        </div>
-    </div>
-    </nav>
-
-
-        <div class="sidebar">
-        <div class="top">
-            <i class="bx bx-menu" id="btn"></i>
-            
-           
-            
-        </div>
-        <div class="user">
-            <img src="Pic/logo.png" alt="me" class="user-img">
-            <div class="logo">
-                <span>University Hills</span>
-            </div>
-            <div>
-                <p class="bold">Welcome, Table <?php echo $_SESSION['table_number']; ?></p>
-                <p class="nickname"> <?php echo $_SESSION['table_name']; ?></p>
-            </div>
-        </div>
-                
-            <div class="lii">
-                <a href="client-product.php">
-                        <i class="bx bxs-shopping-bag"></i>
-                        <span class="nav-item">Order</span>
-                </a>
-                <span class="tooltip">Order</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-cart.php">
-                <i class="fa-solid fa-cart-plus"></i>
-                    <span class="nav-item">Cart</span>
-                </a>
-                <span class="tooltip">Your Cart</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-order.php">
-                <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="nav-item">Orders</span>
-                </a>
-                <span class="tooltip">Orders</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-concern.php">
-                <i class="fa-solid fa-exclamation-triangle"></i>
-                    <span class="nav-item">Concern</span>
-                </a>
-                <span class="tooltip">Submit Concern</span>
-            </div>
-
-            <?php
-            function isAssist()
-            {
-                return isset($_SESSION['staff_access'] );
-            }
-
-            if (isAssist()) {
-                ?>
-                <div class="lii">
-                    <a href="staff-assist.php">
-                        <i class="fa-solid fa-hands-helping"></i>
-                        <span class="nav-item">Assist</span>
-                    </a>
-                    <span class="tooltip">Staff-Assist </span>
-                </div>
-                <?php
-            }
-            ?>
-
-    </div>
+        <?php
+            require 'client-sidebar.php';
+        ?>
         <?php
 
         $table_number =  $_SESSION['table_number'];
@@ -375,7 +298,6 @@ if (!isLoggedIn()) {
   
         <div class="main-content">
             <div class="container-fluid">
-                <h1>Cart</h1>
                 <div class="row">
                     <div class="whitcontainer">
                         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -461,7 +383,7 @@ if (!isLoggedIn()) {
                                 <?php
                                 }
                                 else{
-                                    echo "<p class='emptyword'>YOUR CART IS EMPTY</p>";
+                                    echo "<p class='emptyword'></p>";
                                     echo " <img class='emptypic' src='Pic/emptycart.svg' alt=''>";
 
                                 }
@@ -513,6 +435,7 @@ if (!isLoggedIn()) {
 
 
 
+                        // Function to calculate subtotal and overall total
                 // Function to calculate subtotal and overall total
         function calculateTotals() {
             var rows = document.querySelectorAll("tbody tr");
@@ -520,24 +443,25 @@ if (!isLoggedIn()) {
 
             rows.forEach(function(row) {
                 var quantity = parseInt(row.querySelector(".orderquantity").value);
-                var price = parseFloat(row.cells[3].innerText); // Assuming price is in the fourth column
+
+                // Get the price and remove the peso sign for calculations
+                var priceElement = row.cells[3];
+                var price = parseFloat(priceElement.innerText.replace('₱', '')); // Assuming price is in the fourth column
+
                 var subtotal = quantity * price;
-                row.querySelector(".subtotal").innerText = subtotal.toFixed(2);
+
+                // Add the peso sign to the price and update it in the table
+                priceElement.innerText = '₱' + price.toFixed(2);
+
+                // Add the peso sign before the subtotal and update it in the table
+                row.querySelector(".subtotal").innerText = '₱' + subtotal.toFixed(2);
+
                 overallTotal += subtotal;
             });
 
-            // Update the overall total
-            document.getElementById("overall_total").innerText = overallTotal.toFixed(2);
+            // Update the overall total with the peso sign
+            document.getElementById("overall_total").innerText = '₱' + overallTotal.toFixed(2);
         }
-
-        // Attach onchange event listener to quantity inputs
-        var quantityInputs = document.querySelectorAll(".orderquantity");
-        quantityInputs.forEach(function(input) {
-            input.addEventListener("change", function() {
-                calculateTotals();
-                this.form.submit(); // Submit the form after updating quantity
-            });
-        });
 
         // Call calculateTotals initially to set up the totals
         calculateTotals();

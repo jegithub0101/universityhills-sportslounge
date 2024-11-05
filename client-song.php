@@ -60,98 +60,13 @@ if (!isLoggedIn()) {
     
 </style>
 
-<style>
-        .nickname{
-            border-bottom: 2px solid white;
-            margin-bottom: 3%;
-            padding-left: 25%;
-            padding-right: 5%;
-            padding-bottom: 12%;
-        }
-        .sidebar.active .user .bold{
-            border: none;
-        }
-    </style>
 
 </head>
 <body>
-<div class="sidebar">
-        <div class="top">
-            <i class="bx bx-menu" id="btn"></i>
-            
-           
-            
-        </div>
-        <div class="user">
-            <img src="Pic/logo.png" alt="me" class="user-img">
-            <div class="logo">
-                <span>University Hills</span>
-            </div>
-            <div>
-                <p class="bold">Welcome, Table <?php echo $_SESSION['table_number']; ?></p>
-                <p class="nickname"> <?php echo $_SESSION['table_name']; ?></p>
-            </div>
-        </div>
-                
-            <div class="lii">
-                <a href="client-product.php">
-                        <i class="bx bxs-shopping-bag"></i>
-                        <span class="nav-item">Products</span>
-                </a>
-                <span class="tooltip">Products</span>
-            </div>
 
-            <div class="lii">
-                <a href="client-billiard.php">
-                <i class="fa-solid fa-bowling-ball"></i>
-                    <span class="nav-item">Billiard</span>
-                </a>
-                <span class="tooltip">Billiard</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-song.php">
-                <i class="fa-solid fa-music"></i>
-                    <span class="nav-item">Song</span>
-                </a>
-                <span class="tooltip">Song Request</span>
-            </div>
-
-
-            <div class="lii">
-                <a href="client-cart.php">
-                <i class="bi bi-cart"></i>
-                    <span class="nav-item">Cart</span>
-                </a>
-                <span class="tooltip">Your Cart</span>
-            </div>
-
-
-            <div class="lii">
-                <a href="client-commment.php">
-                    <i class="fa-solid fa-comments"></i>
-                    <span class="nav-item">Comment</span>
-                </a>
-                <span class="tooltip">Comment</span>
-            </div>
-
-
-    </div>
-  
     <div class="main-content">
-        <div class="container-fluid">
-            <h1>University Hills Sport Lounge</h1>
-        </div>
-
-        <form id="songform" method="POST" action="">
-            <div class="form-group divsong">
-                <input type="text" class="form-control inputsong" id="songrequest" placeholder="Request Song" name="songrequest" maxlength="100" required>
-                <button type="submit" class="btn btn-primary" id="savesongBtn">Request</button>
-            </div>
-        </form>
-
         <div id="link_wrapper">
-        <h2 class="text-center">Song Requests</h2>
+            <h2 class="text-center">Song Requests</h2>
 
 
 

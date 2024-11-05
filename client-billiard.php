@@ -48,6 +48,11 @@ $queueResult = $conn->query($sql);
         background-color: #343a40; /* Dark color */
         color: #fff; /* Text color */
     }
+
+
+    .card{
+        margin-right: 5%;
+    }
     @media only screen and (max-width: 450px){
         .card-title{
             font-size: 12pt;
@@ -77,8 +82,8 @@ $queueResult = $conn->query($sql);
 
 
 <h2 class="text-center mt-3 mb-4">Billiard Reservation</h2>
-        
-        <!-- Reservation Table -->
+
+<!-- Reservation Table -->
 <div class="card mt-3">
     <div class="card-header">
         <h3>Reservation Table</h3>
@@ -97,7 +102,7 @@ $queueResult = $conn->query($sql);
                             <div class="card-body">
                                 <h5 class="card-title">Billiard Table Number: <?php echo $row["pool_table_number"]; ?></h5>
                                 <p class="card-text">Playing: Table Number <?php echo $row["table_number"]; ?></p>
-                                <p class="card-text">Time Reserved <?php echo $row["time_reserved"]; ?></p>
+                                <p class="card-text">Time Reserved: <?php echo $row["time_reserved"]; ?></p>
                                 <p class="card-text">Time Started: <?php echo $row["time_playing"]; ?></p>
                                 <p class="card-text">Time End: <?php echo $row["time_end"]; ?></p>
                                 <!-- Conditional styling based on status -->
@@ -150,13 +155,60 @@ $queueResult = $conn->query($sql);
                     ?>
                 </tbody>
             </table>
-            <button id="reserve-btn" class="btn btn-primary mt-3" onclick="reservePoolTable()">Reserve</button>
-        </div>
+            <button type="button" class="btn btn-primary btn-lg mt-3" onclick="reservePoolTable()">Reserve</button>
+            </div>
     </div>
 </div>
+
+<!-- Include jQuery (if not already included) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function reservePoolTable() {
+    $.ajax({
+        url: "client-billiard-reserve.php", // The PHP file handling the reservation
+        type: "POST",
+        data: {
+            table_number: $("#table_number").val() // Assuming you have table number input
+        },
+        success: function(response) {
+            alert(response); // Notify user about reservation status
+            // Optionally, you could refresh only the reservation section instead of the whole page
+            $('#billiard-tab').trigger('click'); // Keeps the user on the Billiard Reservation tab
+        },
+        error: function(xhr, status, error) {
+            alert("Error: " + error); // Error handling
+        }
+    });
+}
+
+// Function to cancel a reservation
+function cancelReservation(queueId) {
+    var confirmCancel = confirm("Are you sure you want to cancel this reservation?");
+    if (confirmCancel) {
+        $.ajax({
+            url: "cancel-reservation.php", // The PHP file handling cancellation
+            type: "POST",
+            data: {
+                queue_id: queueId // Sending queue ID to cancel the reservation
+            },
+            success: function(response) {
+                alert(response); // Notify user about the cancellation status
+                // Optionally, you could refresh only the reservation section instead of the whole page
+                $('#billiard-tab').trigger('click'); // Keeps the user on the Billiard Reservation tab
+            },
+            error: function(xhr, status, error) {
+                alert("Error: " + error); // Error handling
+            }
+        });
+    }
+}
+
+</script>
 
 <?php
 $conn->close();
 ?>
+
 
 

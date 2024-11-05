@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     if(isset($_POST['loginbtn'])){
         $nickname = $_POST['nickname'];
         $verification = $_POST['verification'];
-        $tablenumber = $_POST['tablenumber'];
+        $tablenumber = $_GET['table_number']; 
         
         // Prepared statement to prevent SQL injection
         $sql = "SELECT table_number FROM tables WHERE table_number=? AND verification_code=?";
@@ -37,33 +37,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
          $stmt_tid->execute();
          $result_tid = $stmt_tid->get_result();
  
-
         // Check if a row is returned, indicating successful verification
-        if($result->num_rows > 0){
-
+         if ($result->num_rows > 0) {
             $row_tid = $result_tid->fetch_assoc();
             $tid = $row_tid['tid'];
-
+        
             $_SESSION['table_id'] = $row_tid['tid'];
             $_SESSION['table_number'] = $row_tid['table_number'];
-
-
-            $insertSql = "INSERT INTO customer (tid,table_number, nickname) VALUES (?,?,?)";
+        
+            $active = 'trues'; // or 1 for true
+            // Corrected INSERT statement
+            $insertSql = "INSERT INTO customer (tid, table_number, nickname, active) VALUES (?,?,?,?)"; // Ensure 'is_active' is the correct column name
             $insertStmt = $connection->prepare($insertSql);
-            $insertStmt->bind_param("iis", $tid, $tablenumber, $nickname);
-            $insertStmt->execute();
+            $insertStmt->bind_param("iiss", $tid, $tablenumber, $nickname, $active); // You need to define $active variable
 
+        
+            $insertStmt->execute();
+        
             $_SESSION['table_name'] = $nickname;
             // Redirect to client-product.php
             header("location: client-product.php");
             exit;
         } else {
             // Verification failed, provide feedback to the user
-                     // Set session variable for incorrect login attempt
-                $_SESSION['login_error'] = "Incorrect verification code.";
-                // Redirect back to the login page
-                header("Location: client-login.php");
-                exit();
+            // Set session variable for incorrect login attempt
+            $_SESSION['login_error'] = "Incorrect verification code.";
+        
+            // Retrieve table_number from the URL parameters
+            if (isset($_GET['table_number'])) {
+                $table_number = intval($_GET['table_number']); // Convert to integer for safety
+            } else {
+                $table_number = 0; // Default value if not set
+            }
+        
+            // Redirect back to the login page with the dynamic table_number
+            header("Location: client-login.php?table_number=$table_number");
+            exit();
         }
     }
 }
@@ -298,6 +307,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                                     padding-bottom: 2%;
                                 }
                             }
+
+                            .input {
+                            display: inline-block; 
+                            padding: 10px; 
+                            border: 1px solid #ccc; 
+                            border-radius: 4px; 
+                            background-color: #f9f9f9; 
+                            color: #333; 
+                         }
                         </style>
 
                         <form method="POST" class="formlogin">
@@ -309,6 +327,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                                 echo '<div class="error-label">'.$_SESSION['login_error'].'</div>';
                                 unset($_SESSION['login_error']); // Remove error message after displaying it
                             }
+
+                            $selected_table_number = isset($_GET['table_number']) ? $_GET['table_number'] : ''; // Get the table number from the URL
+
                             ?>
 
                             <label>
@@ -317,35 +338,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                             </label>
 
                             <label class="">
-                                <select id="tablenumber" name="tablenumber" class="" required="">
-                                    <option value="" disabled selected>Table Number</option>
-                                    <?php
-                                        $sql = "SELECT table_number FROM tables";
+                            <span class="input" id="tablenumber" name="tablenumber" required>
+                                <?php
+                                    // Assuming you have the table_number retrieved from the previous logic
+                                    if (isset($_GET['table_number'])) {
+                                        echo htmlspecialchars($_GET['table_number']); // Display the table number
+                                    } else {
+                                        echo 'No table number provided'; // Fallback message
+                                    }
+                                ?>
+                            </span>
+                            <span class="tablenumber">Table Number</span>
+                        </label>
 
-                                        $result = $connection->query($sql);
-                                        if(!$result){
-                                            die("Invalid query: ". $connection->connect_error);
-                                        }
+                        <label>
+                            <input class="input" type="password" placeholder="" required="" name="verification">
+                            <span>Verification</span>
+                        </label>
+                        <button type="submit" name="loginbtn" id="loginbtn">Login</button>
 
-                                        while($row = $result->fetch_assoc()){
-                                            
-                                            echo"
-                                            <option value='$row[table_number]'>$row[table_number]</option>
-                                            ";
-                                        }
-                                    ?>
-                                </select>
-                                <span class="tablenumber">Table Number</span>
-                                </label>
-
-                            <label>
-                                <input class="input" type="password" placeholder="" required="" name="verification">
-                                <span>verification</span>
-                            </label>
-                            <button type="submit" name="loginbtn" id="loginbtn">Login</button>
-                        </form>
-
-                    
                         
                     </div>
                 </div>

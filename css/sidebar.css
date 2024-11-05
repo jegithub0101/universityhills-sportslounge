@@ -30,9 +30,8 @@
 .user-img{
     width: 70%;
     background-color: #eee;
-
     margin-top: 50px;
-    margin-left: 10%;
+    margin-left: 13%;
     margin-right: 15%;
     border-radius: 100%;
     float: none;
@@ -84,8 +83,9 @@
     pointer-events: none;
     opacity: 0;
     clear: both;
-    margin-left:20% ;
-    
+    margin-left: 7.3%;
+    border-bottom: 2px solid white;
+    margin-bottom: 10px;
 }
 .sidebar.active .user .logo{
     opacity: 1;
@@ -121,17 +121,20 @@
     opacity: 1;
 }
 
-.imglogo{
+.imglogo {
     width: 70%;
     background-color: #eee;
-
     margin-top: 15%;
-    margin-left: 10%;
-    margin-right: 15%;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 100%;
     display: none;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
     
 }
+
 .sidebar.active .top .imglogo{
     display: block;
     opacity: 1;
@@ -139,18 +142,33 @@
 
 .sidebar .user .logo{
     display: none;
+    text-align: center;
+    max-width: 80%;
+    display: none;
+
 }
+
+.sidebar .user .nickname {
+    display: none;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.sidebar.active .user .nickname {
+    display: block;
+    transition: opacity 0.5s ease-in-out;     
+}
+
 .sidebar.active .user .logo{
     display: block;
     margin-top: 10%;
 }
 .sidebar.active .user .bold{
+    max-width: 100%;
     margin-bottom: 3%;
-    border-bottom: 2px solid white;
     padding-left: 8%;
     padding-right: 5%;
-    padding-bottom: 12%;
     width: 80%;
+    text-align: center;
     
 }
 

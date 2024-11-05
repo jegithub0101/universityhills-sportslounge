@@ -10,10 +10,9 @@ $database = "university_hills";
 $connection = mysqli_connect($servername, $username, $password, $database);
 
 // Check connection
-if($connection->connect_error){
+if ($connection->connect_error) {
     die("Connection failed: " . $connection->connect_error);
 }
-
 
 // Function to check if a user is logged in
 function isLoggedIn()
@@ -29,57 +28,51 @@ if (!isLoggedIn()) {
 
 // Check if the logout button was clicked
 if (isset($_POST['logout'])) {
-    // Unset all session variables
     session_unset();
-
-    // Destroy the session
     session_destroy();
-
-    // Redirect to login page or wherever you want
     header("Location: staff-login.php");
     exit();
 }
-?>
-    <?php
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST"){
-        if(isset($_POST['loginbtn'])){
-            $nickname = $_POST['nickname'];
-            $tablenumber = $_POST['tablenumber'];
-        
-             // Prepared statement to retrieve tid based on the selected table_number
-             $sql_tid = "SELECT nickname FROM customer WHERE table_number = ? and nickname = '$nickname'";
-             $stmt_tid = $connection->prepare($sql_tid);
-             $stmt_tid->bind_param("i", $tablenumber);
-             $stmt_tid->execute();
-             $result_tid = $stmt_tid->get_result();
-     
-    
-            // Check if a row is returned, indicating successful verification
-            if($result_tid->num_rows > 0){
-    
-                $_SESSION['table_number'] = $tablenumber;
-                $_SESSION['table_name'] = $nickname;
-                // Redirect to client-product.php
-                header("location: client-product.php");
-                exit;
-    
-            } else {
-                $_SESSION['table_number'] = $tablenumber;
-                $_SESSION['table_name'] = $nickname;
-    
-                $insertSql = "INSERT INTO CUSTOMER (table_number, nickname) VALUES (?,?)";
-                $insertStmt = $connection->prepare($insertSql);
-                $insertStmt->bind_param("is", $tablenumber, $nickname);
-                $insertStmt->execute();
-                
-                // Redirect to client-product.php
-                header("location: client-product.php");
-                exit;
-            }
+// Handle login
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['loginbtn'])) {
+        $nickname = $_POST['nickname'];
+        $tablenumber = $_POST['tablenumber'];
+        $tid = $_POST['tid'];
+
+        // Prepared statement to check if the customer exists
+        $sql_tid = "SELECT cid FROM customer WHERE table_number = ? AND nickname = ?";
+        $stmt_tid = $connection->prepare($sql_tid);
+        $stmt_tid->bind_param("is", $tablenumber, $nickname);
+        $stmt_tid->execute();
+        $result_tid = $stmt_tid->get_result();
+
+        // Check if a row is returned, indicating successful verification
+        if ($result_tid->num_rows > 0) {
+            $_SESSION['tid'] = $tablenumber;
+            $_SESSION['table_number'] = $tablenumber;
+            $_SESSION['table_name'] = $nickname;
+            header("location: client-product.php");
+            exit;
+        } else {
+            $_SESSION['tid'] = $tablenumber;
+            $_SESSION['table_number'] = $tablenumber;
+            $_SESSION['table_name'] = $nickname;
+
+            $active = 'trues'; // or 1 for true
+
+            $insertSql = "INSERT INTO customer (tid, table_number, nickname, active) VALUES (?,?,?,?)";
+            $insertStmt = $connection->prepare($insertSql);
+            $insertStmt->bind_param("iiss",$tablenumber, $tablenumber, $nickname,$active);
+            $insertStmt->execute();
+            
+            header("location: client-product.php");
+            exit;
         }
     }
-        ?>
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -87,9 +80,10 @@ if (isset($_POST['logout'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assist | University Hills</title>
-    <link rel="icon" href="Pic/uhicon.png" type="image/x-icon" />
+    <link rel="icon" href="Pic/logo.svg" type="image/x-icon">
     <link rel="stylesheet" href="bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css">
     <script src="bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -108,6 +102,11 @@ if (isset($_POST['logout'])) {
         .main-content{
             height: 100vh;
             overflow-x: hidden;
+            background-image: url("Pic/backg.svg");
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-position: center; 
+            
            
         }
         .x{
@@ -122,6 +121,9 @@ if (isset($_POST['logout'])) {
            
         
         }
+        .titleassist{
+            color: white;
+        }
         h2{
             margin-bottom: 5%;
         }
@@ -131,6 +133,18 @@ if (isset($_POST['logout'])) {
             margin: 14% 0% 0% 14%;
             padding: 7% 7% 7% 7%;
             border-radius: 13px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            
+            background: rgba(18, 23, 30, 0.4); /* Dark color with transparency */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37); /* Deep shadow for depth */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(10px); /* For Safari support */
+            border: 1px solid rgba(255, 255, 255, 0.18); /* Light border to enhance the glass look */
+            max-width: 800px;
+            margin: 0 auto; /* Center the form */
+            margin-top: 10%;
         }
         .formlogin>h2{
             text-align: center;
@@ -151,7 +165,7 @@ if (isset($_POST['logout'])) {
             width: 100%;
             padding: 20px 05px 05px 10px;
             outline: 0;
-            border: 1px solid rgba(105, 105, 105, 0.397);
+            border: 1px solid black;
             border-radius: 10px;
         }
 
@@ -160,7 +174,7 @@ if (isset($_POST['logout'])) {
             width: 100%;
             padding: 20px 05px 05px 10px;
             outline: 0;
-            border: 1px solid rgba(105, 105, 105, 0.397);
+            border: 1px solid black;
             border-radius: 10px;
         }
         
@@ -214,23 +228,25 @@ if (isset($_POST['logout'])) {
             font-size: 0.7em;
             font-weight: 600;
             
+            
         }
 
 
 
 
-        #loginbtn{
-            background-color: #141414;
-            color: whitesmoke;
-            margin-left: 28%;
-            width: 40%;
-            height: 36px;
-            border-radius: 7px;
-
-        }
-        #loginbtn:hover{
+        #loginbtn, #clearButton{
             background-color: whitesmoke;
             color: #141414;
+            margin-left: 12%;
+            width: 30%;
+            height: 36px;
+            border-radius: 7px;
+            border: gray solid 2px;
+
+        }
+        #loginbtn:hover, #clearButton:hover{
+            background-color: white;
+            
 
         }
 
@@ -273,188 +289,91 @@ if (isset($_POST['logout'])) {
 
 </head>
 <body>
-
-<nav class="navbar navbar-dark bg-dark fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">UH STAFF</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li class="nav-item">
-                    <a class="nav-link " href="staff-orders.php">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="staff-bills.php">Bills</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="staff-billiard.php">Billiards</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="staff-song.php">Song</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="staff-assist.php">Assist</a>
-                </li>
-
-                <li class="nav-item">
-                <a class="nav-link " href="staff-concern.php">Customer's Concerns</a>
-                </li>
-
-
-                <style>
-                .navlogout{
-                    
-                    width:20%;
-                    background-color: white;
-                    color: black;
-                    border-radius: 10px;
-                }
-            </style>
-
-            <div class="lii">
-                <form action="" method="post" onsubmit="return confirmLogout()">
-                    <button type="submit" name="logout" class="logout-button navlogout">
-                        <i class='bx bx-log-out'></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-        </div>
-    </div>
-    </nav>
- 
-    <div class="sidebar">
-        <div class="top">
-            <i class="bx bx-menu" id="btn"></i>
-        </div>
-        
-        <div class="user">
-            <img src="Pic/logo.png" alt="me" class="user-img">
-            <div class="logo">
-                <span>University Hills</span>
-            </div>
-            <div>
-                <p class="bold">Welcome, Staff!</p>
-            </div>
-        </div>
-                
-            <div class="lii">
-                <a href="staff-orders.php">
-                <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="nav-item">Orders</span>
-                </a>
-                <span class="tooltip">Orders</span>
-            </div>
-
-            <div class="lii">
-                <a href="staff-bills.php">
-                <i class="fa-solid fa-money-check-dollar"></i>
-                    <span class="nav-item">Bills</span>
-                </a>
-                <span class="tooltip">Bills</span>
-            </div>
-
-            <div class="lii">
-                <a href="staff-billiard.php">
-                <i class="fa-solid fa-bowling-ball"></i>
-                    <span class="nav-item">Billiard</span>
-                </a>
-                <span class="tooltip">Billiard</span>
-            </div>
-
-            <div class="lii">
-                <a href="staff-song.php">
-                <i class="fa-solid fa-music"></i>
-                    <span class="nav-item">Song</span>
-                </a>
-                <span class="tooltip">Song Request</span>
-            </div>
-
-            <div class="lii">
-                <a href="staff-assist.php">
-                <i class="fa-solid fa-hands-helping"></i>
-                    <span class="nav-item">Assist</span>
-                </a>
-                <span class="tooltip">Staff-Assist </span>
-            </div>
-
-            <div class="lii">
-                <a href="staff-concern.php">
-                <i class="fa-solid fa-exclamation-triangle"></i>
-                    <span class="nav-item">Concerns</span>
-                </a>
-                <span class="tooltip">Customer's Concerns</span>
-            </div>
-
-            <div class="lii">
-            <form action="" method="post" onsubmit="return confirmLogout()">
-                <button type="submit" name="logout" class="logout-button">
-                <i class='bx bx-log-out'></i>
-                </button>
-            </form>
-            <span class="tooltip">Logout</span>
-            </div>
-
-    </div>
-
-    <script>
-function confirmLogout() {
-  return confirm("Are you sure you want to log out?");
-}
-</script>
+    <?php
+        require 'staff-sidebar.php';
+    ?>
   
-    <div class="main-content">
-        <div class="container-fluid">
-                <div class="container">
-                <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-10 con1">
-                    <div class="containerblack">
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="container">
+            <form method="POST" class="formlogin">
+                
+                <h2 class="titleassist"><i class="fa-solid fa-face-smile"></i> Assist a customer <i class="fa-solid fa-bowl-food"></i> <i class="fa-solid fa-bottle-droplet"></i></i></h2>
+                
+                <label>
+    <select id="tablenumber" name="tablenumber" required>
+        <option value="" disabled selected>number</option>
+        <?php
+        $sql = "SELECT tid, table_number FROM tables";
+        $result = $connection->query($sql);
+        while ($row = $result->fetch_assoc()) {
+            echo "<option value='{$row['table_number']}' data-tid='{$row['tid']}'>{$row['table_number']}</option>"; 
+        }
+        ?>
+    </select>
+    <span>Table Number</span>
+    </label>
 
-                        <form method="POST" class="formlogin">
-                            <h2>Assist a customer</h2>
-                            <label>
-                                <input class="input" type="text" placeholder="" required="" name="nickname">
-                                <span>Name</span>
-                            </label>
+    <label>
+        <select id="tableclients" name="tableclients" disabled>
+            <option value="" disabled selected>Customer/s</option>
+        </select>
+        <span>Customers</span>
+    </label>
 
-                            <label class="">
-                                <select id="tablenumber" name="tablenumber" class="" required="">
-                                    <option value="" disabled selected>Table Number</option>
-                                    <?php
-                                        $sql = "SELECT table_number FROM tables";
+    <label>
+        <input class="input" type="text" placeholder="" required name="nickname" >
+        <span>Name</span>
+    </label>  
 
-                                        $result = $connection->query($sql);
-                                        if(!$result){
-                                            die("Invalid query: ". $connection->connect_error);
-                                        }
+                <!-- Hidden input for the tid -->
+                <input type="hidden" name="tid" id="tid">
 
-                                        while($row = $result->fetch_assoc()){
-                                            
-                                            echo"
-                                            <option value='$row[table_number]'>$row[table_number]</option>
-                                            ";
-                                        }
-                                    ?>
-                                </select>
-                                <span class="tablenumber">Table Number</span>
-                                </label>
-
-                            <button type="submit" name="loginbtn" id="loginbtn">Enter</button>
-                        </form>
-                    </div>
-                </div>
-               </div>
-            </div>
-        </div>  
+                <button type="submit" name="loginbtn" id="loginbtn">Enter</button>
+                <button type="button" id="clearButton" class="clearbtn">Clear</button>
+            </form>
+        </div>
     </div>
+</div>
+
+
+
+<script>
+    document.getElementById('tablenumber').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const tableNumber = this.value;
+    const tid = selectedOption.getAttribute('data-tid'); // Get the tid from the selected option
+
+    // Set the hidden input value
+    document.getElementById('tid').value = tid;
+
+    // Enable customer dropdown and nickname input
+    document.getElementById('tableclients').disabled = false;
+    
+
+    // Fetch customer nicknames based on selected table number
+    fetch(`get_customers.php?table_number=${tableNumber}`)
+        .then(response => response.json())
+        .then(data => {
+            const tableClientsSelect = document.getElementById('tableclients');
+            tableClientsSelect.innerHTML = '<option value="" disabled selected>Customer/s</option>'; // Reset options
+
+            data.forEach(customer => {
+                const option = document.createElement('option');
+                option.value = customer.nickname;
+                option.textContent = customer.nickname;
+                tableClientsSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching customer data:', error));
+});
+        document.getElementById('tableclients').addEventListener('change', function() {
+        const selectedNickname = this.value;
+        document.querySelector('input[name="nickname"]').value = selectedNickname; // Set nickname input
+        
+    });
+    
+</script>
 </body>
 
 <script>
@@ -464,6 +383,25 @@ function confirmLogout() {
     btn.onclick = function () {
         sidebar.classList.toggle('active');
     };
+</script>
+
+
+<script>
+    document.getElementById('clearButton').addEventListener('click', function() {
+    // Reset the table number dropdown
+    document.getElementById('tablenumber').selectedIndex = 0;
+
+    // Disable the customer dropdown and nickname input
+    document.getElementById('tableclients').disabled = true;
+
+    // Reset the customer dropdown options
+    const tableClientsSelect = document.getElementById('tableclients');
+    tableClientsSelect.innerHTML = '<option value="" disabled selected>Customer/s</option>';
+
+    // Clear the nickname input
+    document.querySelector('input[name="nickname"]').value = '';
+});
+
 </script>
 
 </html>

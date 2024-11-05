@@ -14,7 +14,6 @@ $connection = new mysqli($servername, $username, $password, $database);
 if ($connection->connect_error) {
     die("Connection failed: " . $connection->connect_error);
 }
-
 function isLoggedIn()
 {
     return isset($_SESSION['table_number'] );
@@ -37,7 +36,7 @@ if (!isLoggedIn()) {
         margin-top: 40px;
         float: left;
         margin-right: 1%;
-        height: 500px;
+        height: 400px;
         overflow:hidden;
         
         box-shadow: 5px 10px #898484;
@@ -45,9 +44,8 @@ if (!isLoggedIn()) {
         max-width: 252px;
         position: relative;
 
-        border-radius: 5px ;
-        border: 1px solid #12171e;
-        box-shadow: none;
+        border-radius: 10px ;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
         margin-top: 20px;
         margin-bottom: 1%;
@@ -58,7 +56,6 @@ if (!isLoggedIn()) {
         
         font-weight: 500;
         margin-bottom: 0%;
-        border-top: 1px solid #12171e;
         position: absolute;
         bottom: 0px;
         border-radius: 0px;
@@ -68,6 +65,7 @@ if (!isLoggedIn()) {
           font-weight: 500;
           color: brown;
         }
+        
        
 
       .crop-img{
@@ -77,7 +75,7 @@ if (!isLoggedIn()) {
       
         
         margin-top: 0%;
-        border-bottom: 1px solid #12171e;
+    
       }
       .prodimg{
         width: 100%;
@@ -87,7 +85,7 @@ if (!isLoggedIn()) {
         margin-top: 10px;
       }
       .infodetail{
-        width: 97%;
+        width: 100%;
         height: 90px;
         overflow-y: auto;
         
@@ -96,43 +94,88 @@ if (!isLoggedIn()) {
        
       }
       .white{
-        background-color: white;
+        background-color: #1F487E;
         color: black;
         padding: 2%;
 
       }
+      /* if added to cart*/
       .gray{
-        background-color: #12171e;
-        color: gray;
+        background-color: rgb(40, 167, 69);
+        color: #fff;
         padding: 2%;
+        pointer-events: none;
       }
       
       .namedetail, .categorydetail ,.stockdetail,.pricedetail{
+        
         color: #12171e;
       }
-      .orderBtn{
 
-        border: none;
-
-        border-top: 1px solid #12171e;
+      .namedetail {
+        font-size: 18px;
+            font-weight: bold;
+            padding: 10px 15px 0px;
       }
+
+      .pricedetail{
+        padding: 0 15px 0px; /* Add some space below the price */
+            font-size: 16px;
+            color: #636262;
+            font-weight: bold; /* Make price stand out */
+      }
+
+      .infodetail{
+        padding: 10px 15px;
+            font-size: 14px;
+            color: #636262;
+            height: 75px; /* Set a fixed height for the description area */
+            overflow-y: auto; /* Add scroll if content exceeds height */
+            flex-grow: 1; /* Allow the text area to expand */
+           }
+      .orderBtn{
+        /* background-color: #1F487E; */
+        color: #fff;
+        transition: background-color 0.3s;
+        border: none;
+        height: 10%;
+      }
+
+      .orderBtn:hover{
+        background-color: #1D3461;
+        color: #fff;
+      }
+
+
+      #noResults {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%; /* Adjust as needed */
+            text-align: center;
+            padding: 20px;
+        }
+
       .colempty{
-       margin-top: 14%;
-       margin-left: 25%; 
+       margin-top: 5%;
+       margin-left: 28%; 
       }
       
       @media only screen and (max-width: 1300px) {
             .colempty{
-          margin-top: 14%;
+          margin-top: 5%;
           margin-left: 10%; 
       }
-        } 
+        }
 
       @media only screen and (max-width: 1044px) {
             .showprodbox{
                 min-width: 250px;
                 max-width: 250px;
                 margin-left: 30px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
                 
             }
         }
@@ -140,7 +183,9 @@ if (!isLoggedIn()) {
             .showprodbox{
                 min-width: 300px;
                 max-width: 300px;
-                margin-left: 50px 
+                margin-left: 50px; 
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
                 
                 
             }
@@ -150,6 +195,8 @@ if (!isLoggedIn()) {
                 min-width: 300px;
                 max-width: 300px;
                 margin-left: 25px ;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
             }
             .colempty img{
                 width: 90%;
@@ -160,6 +207,8 @@ if (!isLoggedIn()) {
                 min-width: 250px;
                 max-width: 255px;
                 margin-left: 25px ;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
             }
             .details{
               margin-left: 5px;
@@ -172,13 +221,14 @@ if (!isLoggedIn()) {
                 margin-left: 10px ;
                 max-height: 375px;
                 font-size: 10pt;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
             }
           .crop-img{
             max-width: 100%; 
             max-height: 230px;
             overflow: hidden;
             border-radius: 10px;
-            border: 1px solid #12171e; 
             margin-top: 8%;
 
           }
@@ -186,12 +236,7 @@ if (!isLoggedIn()) {
             max-width: 100%;
             max-height: 150px;
           }
-          .infodetail{
-           
-            height: 70px;
-            
           
-            }
         }
         @media only screen and (max-width: 621px) {
           .showprodbox{
@@ -201,56 +246,55 @@ if (!isLoggedIn()) {
                 max-height: 350px;
                 
                 font-size: 10pt;
-                border-radius: 5px ;
-                border: 1px solid #12171e;
+                border-radius: 10px ;
                 box-shadow: none;
                 padding: 0px;
                 padding-bottom: 0%;
                 margin-top: 20px;
                 margin-bottom: 1%;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
             }
             .crop-img,.prodimg{
               border-radius: 0px;
               border: none;
               margin-top: 0%;
             }
-            .crop-img{
-              border-bottom: 1px solid #12171e;
-            }
+
             .orderBtn{
               width: 100%;
+              height: 10%;
               margin-top: 0%;
               font-weight: 500;
               border: none;
               margin-bottom: 0%;
-              border-top: 1px solid #12171e;
               position: absolute;
               bottom: 0px;
 
             }
-            span{
-              font-weight: 500;
-              color: brown;
-            }
-            
-           
         
         }
         @media only screen and (max-width: 380px){
           .showprodbox{
                 min-width: 156px;
                 max-width: 156px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
             }
         }
         @media only screen and (max-width: 320px){
           .showprodbox{
                 min-width: 136px;
                 max-width: 136px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
             }
         }
 
 
 </style>
+
+
 
 
 <?php
@@ -307,46 +351,74 @@ if ($result->num_rows === 0) {
             </div>
             <div class='details'>
                 
-                <div class='namedetail'><span>Name:</span> <?php echo $row['product_name']; ?></div>
-                <div class='categorydetail'><span>Category:</span> <?php echo $row['category']; ?></div>
-                <div class='stockdetail'><span>Stocks:</span> <?php echo $row['stock']; ?></div>
-                <div class='pricedetail'><span>Price: </span> <?php echo $row['price']; ?></div>
-                <div class='infodetail'><span>Information:</span> <?php echo $row['information']; ?></div>
+                <div class='namedetail'><?php echo $row['product_name']; ?></div>
+                <div class='pricedetail'>₱<?php echo $row['price']; ?></div>
+                <div class='infodetail'><strong>Description:</strong> <?php echo $row['information']; ?></div>
+                <!-- <div class='infodetail'>
+                    <p>
+                        <?php
+                        // Truncate the information to 7-8 words
+                        $words = explode(' ', $row['information']);
+                        $truncated_info = implode(' ', array_slice($words, 0, 7)) . '...';
+                        echo $truncated_info;
+                        ?>
+                        <span class="read-more-link" onclick="openModal('<?php echo addslashes($row['information']); ?>')">Read more</span>
+                    </p>
+                </div> -->
                 
             </div>
           
 
 
-            <form form id="foodform" method="POST" action="client-product.php">
-                <input type='hidden' name='pid' id="pid" value='<?php echo $row['PID']; ?>'>
-                <input type='hidden' name='pname' id="pname" value='<?php echo $row['product_name']; ?>'>
+          <!-- AJAX-based form -->
+            <form id="foodform_<?php echo $pid; ?>" class="foodform">
+                <input type='hidden' name='pid' value='<?php echo $row['PID']; ?>'>
+                <input type='hidden' name='pname' value='<?php echo $row['product_name']; ?>'>
                 <input type='hidden' name='category' value='<?php echo $row['category']; ?>'>
-                <input type='hidden' name='pstock' id="pstock" value='<?php echo $row['stock']; ?>'>
-                <input type='hidden' name='pprice' id="pprice" value='<?php echo $row['price']; ?>'>
-                <input type='hidden' name='pinformation' value='<?php echo $row['information']; ?>'>
-                <!--while showing the product, check also if that product is already existing in the customer_cart. if yes, then the button must be disabled.-->
-
-                <button type='submit' class=' <?php echo $bgcolor; ?> orderBtn' name="orderBtn" form="foodform" onclick="populateorder('<?php echo $row['PID']; ?>', '<?php echo $row['product_name']; ?>', '<?php echo $row['price']; ?>','<?php echo $row['stock'] ?>')" <?php echo $disabled; ?>> <?php echo $added  ?></button>
-
-              </form>
-            <div class='response'></div>
+                <input type='hidden' name='pstock' value='<?php echo $row['stock']; ?>'>
+                <input type='hidden' name='pprice' value='<?php echo $row['price']; ?>'>
+                <button type='button' class='<?php echo $bgcolor; ?> orderBtn' 
+                      name="orderBtn" 
+                      onclick="addToCart(<?php echo $pid; ?>)" 
+                      <?php echo $disabled; ?>>
+                  <?php echo $added; ?>
+              </button>
+            </form>
+            <div id="response_<?php echo $pid; ?>" class="response"></div>
         </div>
     <?php } ?>
 <?php } ?>
 
- <div>
-  <!--tinggal ko yung ajax. pakibalik dex
- </div>-->
 
- <script>
-   function populateorder(productId, productName, price,stock) {
-                // Populate values in the modal form
-                document.getElementById('pid').value = productId;
-                document.getElementById('pname').value = productName;
-                document.getElementById('pprice').value = price;
-                document.getElementById('pstock').value = stock;
+
+<!-- Include jQuery for AJAX -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+function addToCart(pid) {
+    // Get the form data
+    var formData = $('#foodform_' + pid).serialize();
+
+    // Perform AJAX request
+    $.ajax({
+        type: 'POST',
+        url: 'handle_add_to_cart.php',  // This is the file handling the cart addition
+        data: formData,
+        success: function(response) {
+            var res = JSON.parse(response);
+            if (res.status === "success") {
+                // Update button text and disable it
+                $('#foodform_' + pid + ' .orderBtn').html('Added').prop('disabled', true).css('background-color', 'gray');
+                $('#response_' + pid).html('<span style="color:green;">' + res.message + '</span>');
+            } else {
+                $('#response_' + pid).html('<span style="color:red;">' + res.message + '</span>');
+            }
+        },
+        error: function() {
+            $('#response_' + pid).html('<span style="color:red;">An error occurred.</span>');
         }
- </script>
+    });
+}
+</script>
 
 
 

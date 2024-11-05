@@ -175,6 +175,10 @@ if (isset($_POST['logout'])) {
             </li>
 
             <li class="nav-item">
+            <a class="nav-link" href="staff-table.php">Table Codes</a>
+            </li>
+
+            <li class="nav-item">
             <a class="nav-link" href="staff-logout.php">Logout</a>
             </li>
       </div>
@@ -246,6 +250,7 @@ if (isset($_POST['logout'])) {
                 </a>
                 <span class="tooltip">Customer's Concerns</span>
             </div>
+
 
             <div class="lii">
                 <a href="staff-logout.php">

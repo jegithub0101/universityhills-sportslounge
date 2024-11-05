@@ -61,9 +61,10 @@ if (isset($_POST['logout'])) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
+    <link rel="icon" href="Pic/logo.svg" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-straight/css/uicons-bold-straight.css'>
     <link rel="stylesheet" href="css/sidebar.css">
 
 
@@ -77,11 +78,7 @@ if (isset($_POST['logout'])) {
             margin-bottom: 2%;
         }
 
-    </style>
-
-    <style>
-
-.uhlogo img {
+        .uhlogo img {
             width: 20%;
         }
 
@@ -93,43 +90,6 @@ if (isset($_POST['logout'])) {
             margin: 0% 5% 0% 5%;
         }
 
-        .navbar{
-            display:none
-        }
-
-        .navbar{
-                display:none
-            }
-        @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-            .navbar-toggler{
-                height: 30px;
-                padding-top: 0px;
-            }
-            .navbar-toggler-icon{
-                font-size: 8pt;
-                margin-top: 0px;
-            }
-
-            .table-margin {
-                padding-top: 5%;
-
-            margin:2%;
-        }
-        }
         .prodimg{
             max-width: 120px;
         }
@@ -140,59 +100,45 @@ if (isset($_POST['logout'])) {
             padding-right: 1%;
         }
         .whitcontainer{
-                
-                margin-left: 0%;
-                margin-right: 0%;
-                padding: 0%;
             
-                background-color: white;
-                width: 100%;
-                height: 850px;
-                overflow-x:hidden;
-                border-radius:15px ;
-                position: relative;
-            }
-            .placeorder{
-                position: absolute;
-                bottom: 0px;
-                height: 12%;
-                width: 98%;
-                background-color: #12171e;
-            }
-            .btnorder{
-                position: absolute;
-                right: 50px;
-                bottom: 30px;
-
-            }
-            .total{
-                color: white;
-                text-align: center;
-                margin-top: 1%;
-                font-size: 30pt;
-            }
-
-        @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
+            margin-left: 0%;
+            margin-right: 0%;
+            padding: 0%;
+        
+            background-color: white;
             width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-
-            .container {
-            padding: 5% 0% 0% 0%;
-            }
+            height: 850px;
+            overflow-x:hidden;
+            border-radius:15px ;
+            position: relative;
+        }
+        .placeorder{
+            position: absolute;
+            bottom: 0px;
+            height: 12%;
+            width: 98%;
+            background-color: #12171e;
+        }
+        .btnorder{
+            position: absolute;
+            right: 50px;
+            bottom: 30px;
 
         }
+        .total{
+            color: white;
+            text-align: center;
+            margin-top: 1%;
+            font-size: 30pt;
+        }
+
+    @media only screen and (max-width: 992px) {
+       
+        .container {
+        padding: 5% 0% 0% 0%;
+        }
+
+    }
 
         @media only screen and (min-width: 1200px) {
             .container {
@@ -200,225 +146,135 @@ if (isset($_POST['logout'])) {
             }
         } 
 
+        body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+    }
+
+    .container {
+        font-family: Arial, sans-serif;
+        max-width: 1500px;
+        margin: 30px auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    /* Table styles */
+    .table-margin {
+        margin-top: 20px;
+    }
+
+    .clearbtn {
+        text-align: right; /* Align the button to the right */
+        margin-bottom: 10px;
+        font-family: Arial, sans-serif;
+    }
+
+    #clear-all-btn {
+        background-color: #dc3545;
+        font-family: Arial, sans-serif;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #clear-all-btn:hover {
+        background-color: #c82333;
+        font-family: Arial, sans-serif;
+    }
+
+    .table {
+        table-layout: fixed;
+        width: 100%;
+        border-collapse: collapse;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+        
+    }
+
+    .table th, .table td {
+        padding: 15px;
+        text-align: center;
+        border: 1px solid #ddd;
+        font-family: Arial, sans-serif;
+        
+    }
+
+    .table th {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+    }
+
+    .table-striped tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* Responsive Design for Tablets and Small Screens */
+    @media only screen and (max-width: 768px) {
+        .container {
+            margin: 15px auto;
+            max-width: 100%;
+        }
+
+        #clear-all-btn {
+            width: 100%;
+            margin-top: 10px;
+            font-family: Arial, sans-serif;
+        }
+
+        .table th, .table td {
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+    }
+
+    /* Responsive Design for Mobile Phones */
+    @media only screen and (max-width: 480px) {
+        .container {
+            padding: 15px;
+        }
+
+        .clearbtn {
+            text-align: center; /* Center the button on mobile */
+            font-family: Arial, sans-serif;
+        }
+
+        #clear-all-btn {
+            width: 100%;
+            margin-top: 10px;
+            font-family: Arial, sans-serif;
+        }
+
+        .table th, .table td {
+            font-size: 12px;
+            padding: 10px;
+        }
+    }
+
+    .name {
+        font-family: Arial, sans-serif;
+        font-size: 35px;
+        text-align: center;  /* Horizontally center the text */
+        margin-bottom: 10px; /* Add space below the header */
+        margin-top: 10px;
+
+    }
+
     </style>
 </head>
 <body>
-
-
-<nav class="navbar navbar-dark bg-dark fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">UH ADMIN</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">MENU</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li class="nav-item">
-            <a class="nav-link" href="admin-dashboard.php">Dashboard</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="admin-product.php">Products</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="admin-billiard.php">Billiads</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="admin-song.php">Song</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-order.php">Orders</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-bill.php">Bills</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-history.php">History</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-sales.php">Sales</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-staff.php">Staff</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-comment.php">Comment</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-signup.php">Create Account</a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="admin-concern.php">Customer's Concerns</a>
-            </li>
-
-            <style>
-                .navlogout{
-                    
-                    width:20%;
-                    background-color: white;
-                    color: black;
-                    border-radius: 10px;
-                }
-            </style>
-
-            <div class="lii">
-                <form action="" method="post" onsubmit="return confirmLogout()">
-                    <button type="submit" name="logout" class="logout-button navlogout">
-                        <i class='bx bx-log-out'></i>
-                    </button>
-                </form>
-            </div>
-
-      </div>
-    </div>
-  </div>
-</nav>
-
-    <div class="sidebar">
-        <div class="top">
-            <i class="bx bx-menu" id="btn"></i>
-            
-           
-            
-        </div>
-        <div class="user">
-            <img src="Pic/logo.png" alt="me" class="user-img">
-            <div class="logo">
-                <span>University Hills</span>
-            </div>
-            <div>
-                <p class="bold">Welcome, Admin!</p>
-            </div>
-        </div>
-            <div class="lii">
-                <a href="admin-dashboard.php">
-                    <i class="bx bxs-grid-alt"></i>
-                    <span class="nav-item">Dashboard</span>
-                </a>
-                <span class="tooltip">Dashboard</span>
-            </div>
-                
-            <div class="lii">
-                <a href="admin-product.php">
-                        <i class="bx bxs-shopping-bag"></i>
-                        <span class="nav-item">Products</span>
-                </a>
-                <span class="tooltip">Products</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-billiard.php">
-                <i class="fa-solid fa-bowling-ball"></i>
-                    <span class="nav-item">Billiard</span>
-                </a>
-                <span class="tooltip">Billiard</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-song.php">
-                <i class="fa-solid fa-music"></i>
-                    <span class="nav-item">Song</span>
-                </a>
-                <span class="tooltip">Song Request</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-order.php">
-                <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="nav-item">Order</span>
-                </a>
-                <span class="tooltip">Order</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-bill.php">
-                <i class="fa-solid fa-money-check-dollar"></i>
-                    <span class="nav-item">Bills</span>
-                </a>
-                <span class="tooltip">Bills</span>
-            </div>
-
-
-            <div class="lii">
-                <a href="admin-history.php">
-                    <i class='bx bx-history'></i>
-                    <span class="nav-item">History</span>
-                </a>
-                <span class="tooltip">History</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-sales.php">
-                    <i class="fa-solid fa-coins"></i>
-                    <span class="nav-item">Sales</span>
-                </a>
-                <span class="tooltip">Sales</span>
-            </div>
-            
-            <div class="lii">
-                <a href="admin-staff.php">
-                    <i class="fa-solid fa-user"></i>
-                    <span class="nav-item">Staff</span>
-                </a>
-                <span class="tooltip">Staff</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-comment.php">
-                    <i class="fa-solid fa-comments"></i>
-                    <span class="nav-item">Comment</span>
-                </a>
-                <span class="tooltip">Comment</span>
-            </div>
-            
-            <div class="lii">
-                <a href="admin-signup.php">
-                    <i class="fa-solid fa-user-plus"></i>
-                    <span class="nav-item">Account</span>
-                </a>
-                <span class="tooltip">Create Account</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-concern.php">
-                <i class="fa-solid fa-exclamation-triangle"></i>
-                    <span class="nav-item">Concerns</span>
-                </a>
-                <span class="tooltip">Customer's Concerns</span>
-            </div>
-
-            <div class="lii">
-            <form action="" method="post" onsubmit="return confirmLogout()">
-                <button type="submit" name="logout" class="logout-button">
-                <i class='bx bx-log-out'></i>
-                </button>
-            </form>
-            <span class="tooltip">Logout</span>
-            </div>
-
-    </div>
-
-    <script>
-function confirmLogout() {
-  return confirm("Are you sure you want to log out?");
-}
-</script>
-
-        <div class="container">
+    <?php   
+        require 'admin-sidebar.php';
+    ?>
+<div class="main-content">
+        <h1 class="name">Customer Concerns</h1>
+        <div class="container mt-4">
         <div class="table-margin">
-            <h1 class="mt-4">Concerns</h1>
             <div class="clearbtn">
                 <button class="btn btn-danger" id="clear-all-btn">Clear All</button>
             </div>
