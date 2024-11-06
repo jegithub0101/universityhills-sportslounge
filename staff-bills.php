@@ -267,204 +267,158 @@ if (isset($_POST['logout'])) {
         <div class="container-fluid">
             <h1>Bills</h1>
             <div class="row">
-            <?php
-            $sql_bill_table = "SELECT DISTINCT table_number FROM admin_order WHERE status = 'Request' order by billout_by";
-            $result_bill_table = $connection->query($sql_bill_table);
-            if ($result_bill_table->num_rows > 0) {
-                
-                // Loop through each tracking number
-                while ($row_bill_table = $result_bill_table->fetch_assoc()) {
-                    $bill_table =  $row_bill_table['table_number']; // table number
-                    $k = 0;
-                    $_SESSION['distinct_cid_count'] = $k;
-                    
-                ?>
-                <div class="col-sm-12 col-md-10 col-lg-4 col-xl-4 billtable">
-                    <div class="tableno "><?php echo $bill_table; ?></div>
-                    <div class="cards">
+    <?php
+    $sql_bill_table = "SELECT DISTINCT table_number FROM admin_order WHERE status = 'Request' ORDER BY billout_by";
+    $result_bill_table = $connection->query($sql_bill_table);
+    if ($result_bill_table->num_rows > 0) {
+        
+        // Loop through each table
+        while ($row_bill_table = $result_bill_table->fetch_assoc()) {
+            $bill_table = $row_bill_table['table_number']; // table number
+            $k = 0;
+            $_SESSION['distinct_cid_count'] = $k;
+            
+            ?>
+            <div class="col-sm-12 col-md-10 col-lg-4 col-xl-4 billtable">
+                <div class="tableno"><?php echo $bill_table; ?></div>
+                <div class="cards">
                     <?php
-                        //getting the cid from admin_order/customer id
-                        $sql_monitor_cid = "SELECT DISTINCT cid FROM admin_order WHERE table_number = $bill_table AND status = 'Request'";
-                        $result_monitor_cid = $connection->query($sql_monitor_cid);
+                    // Get customer IDs for each table
+                    $sql_monitor_cid = "SELECT DISTINCT cid FROM admin_order WHERE table_number = $bill_table AND status = 'Request'";
+                    $result_monitor_cid = $connection->query($sql_monitor_cid);
 
-                    
-
-                        if ($result_monitor_cid->num_rows > 0) {
-                            ?>
-                            <form method="POST">
-                                <?php
-                                // Loop through cid
+                    if ($result_monitor_cid->num_rows > 0) {
+                        ?>
+                        <form method="POST">
+                            <?php
                             while ($row_cid = $result_monitor_cid->fetch_assoc()) {
                                 $cid_user = $row_cid['cid'];
-
-                                // getting the nickname of the customer using cid
-                                $sql_monitor_name = "SELECT nickname FROM customer WHERE cid=$cid_user";
+                                // Fetch customer nickname
+                                $sql_monitor_name = "SELECT nickname FROM customer WHERE cid = $cid_user";
                                 $result_monitor_name = $connection->query($sql_monitor_name);
                                 $row_monitor_name = $result_monitor_name->fetch_assoc();
-
-                                 $k += 1;
-                                 $_SESSION['distinct_cid_count'] = $k;
-
-                                //echo $cid_user;
+                                $k += 1;
+                                $_SESSION['distinct_cid_count'] = $k;
                                 ?>
-                                <div class="name lead d-flex" data-user-id="<?php echo $user['cid']; ?>">
+                                <div class="name lead d-flex" data-user-id="<?php echo $cid_user; ?>">
                                     <div class="me-auto">
-                                        <p >
+                                        <p>
                                             <span><?php echo $row_monitor_name['nickname']; ?></span>
-                                            <input type="hidden" id="name_<?php echo $bill_table. $k  ?>" name="name_<?php echo $bill_table. $k  ?>"  value="<?php echo $row_monitor_name['nickname']; ?>">
+                                            <input type="hidden" id="name_<?php echo $bill_table . $k; ?>" name="name_<?php echo $bill_table . $k; ?>" value="<?php echo $row_monitor_name['nickname']; ?>">
                                         </p>
                                     </div>
                                     <div class="chbox">
-                                        <!--it is the checkbox if the pwd discount is applied-->
-                                        <input type="checkbox"  onclick="updateValidIdCount('<?php echo $bill_table; ?>')" class="validid" id="validid_<?php echo $bill_table. $k  ?>" name="validid_<?php echo $bill_table. $k  ?>" data-user-id="<?php echo $user['cid']; ?>" value="validid">
-                                        <label for="validid_<?php echo $bill_table. $k  ?>">  valid id</label><br>
-                                        <input type="hidden" class="isvalid_<?php echo $bill_table. $k  ?>" value="">
+                                        <input type="checkbox" onclick="updateValidIdCount('<?php echo $bill_table; ?>')" class="validid" id="validid_<?php echo $bill_table . $k; ?>" name="validid_<?php echo $bill_table . $k; ?>" data-user-id="<?php echo $cid_user; ?>" value="validid">
+                                        <label for="validid_<?php echo $bill_table . $k; ?>"> valid id</label><br>
+                                        <input type="hidden" class="isvalid_<?php echo $bill_table . $k; ?>" value="">
                                     </div>
                                 </div>
-
-                                <!--this is the orders of each person within that table-->
+                                <!-- Customer order details -->
                                 <div class="containeritem d-flex bd-highlight">
-                                    <div class="prodnameh flex-fill bd-highlight"> Name </div>
-                                    <div class="pquantityh flex-fill bd-highlight"> QTY </div>
+                                    <div class="prodnameh flex-fill bd-highlight">Name</div>
+                                    <div class="pquantityh flex-fill bd-highlight">QTY</div>
                                     <div class="ppriceh flex-fill bd-highlight">Price</div>
                                     <div class="pstotalh flex-fill bd-highlight">Subtotal</div>
                                 </div>
-
                                 <?php
-
                                 $total_user = 0;
-
-                                $sql_monitor = "SELECT DISTINCT tracking_no FROM admin_order WHERE table_number = $bill_table AND cid=$cid_user";
+                                $sql_monitor = "SELECT DISTINCT tracking_no FROM admin_order WHERE table_number = $bill_table AND cid = $cid_user";
                                 $result_monitor = $connection->query($sql_monitor);
                                 if ($result_monitor->num_rows > 0) {
-                                    
-                                    // Loop through each tracking number
                                     while ($row = $result_monitor->fetch_assoc()) {
                                         $tracking = $row['tracking_no'];
-
-                                        //count of tracking order
-                                        $sql_cancelled_preparing = "SELECT * FROM admin_order WHERE cid=$cid_user AND tracking_no = '$tracking' AND table_number = $bill_table";
+                                        $sql_cancelled_preparing = "SELECT * FROM admin_order WHERE cid = $cid_user AND tracking_no = '$tracking' AND table_number = $bill_table";
                                         $result_can_pre = $connection->query($sql_cancelled_preparing);
                                         $row_can_pre = $result_can_pre->fetch_assoc();
 
-                                        if($row_can_pre['status'] === "Request"){
+                                        if ($row_can_pre['status'] === "Request") {
                                             ?>
-                                                <div class="containerorder"><?php //echo $tracking; ?>
-                                                    <?php
-                                                    $sql_monitor_item = "SELECT * FROM admin_order WHERE cid=$cid_user AND tracking_no = '$tracking' AND table_number = $bill_table AND status = 'Request'";
-                                                    $result_monitor_item = $connection->query($sql_monitor_item);
-                                                    if ($result_monitor_item->num_rows > 0) {
-                                                        // Loop through each item
-                                                        while ($row_item = $result_monitor_item->fetch_assoc()) {
-                                                           
-
-                                                            $usersubtotal = $row_item['quantity'] * $row_item['price'];
-                                                            $total_user += $usersubtotal; // Add the subtotal to the user total amount
-                                                            
+                                            <div class="containerorder">
+                                                <?php
+                                                $sql_monitor_item = "SELECT * FROM admin_order WHERE cid = $cid_user AND tracking_no = '$tracking' AND table_number = $bill_table AND status = 'Request'";
+                                                $result_monitor_item = $connection->query($sql_monitor_item);
+                                                if ($result_monitor_item->num_rows > 0) {
+                                                    while ($row_item = $result_monitor_item->fetch_assoc()) {
+                                                        $usersubtotal = $row_item['quantity'] * $row_item['price'];
+                                                        $total_user += $usersubtotal;
                                                         ?>
-                                                            <div class="containeritem d-flex bd-highlight">
-                                                                <div class="prodname flex-fill bd-highlight"> 
-                                                                    <?php echo $row_item['product_name']; ?>
-                                                                    <input type="hidden" id="pname_<?php echo $bill_table. $k  ?>" name="pname_<?php echo $bill_table. $k  ?>"  value="<?php echo $row_item['product_name']; ?>"> 
-                                                                </div>
-                                                                <div class="pquantity flex-fill bd-highlight">
-                                                                    <?php echo $row_item['quantity']; ?>
-                                                                    <input type="hidden" id="pquantity_<?php echo $bill_table. $k  ?>" name="pquantity_<?php echo $bill_table. $k  ?>"  value="<?php echo $row_item['quantity']; ?>">
-                                                                </div>
-                                                                <div class="pprice flex-fill bd-highlight">
-                                                                    <?php echo $row_item['price']; ?>
-                                                                    <input type="hidden" id="pprice_<?php echo $bill_table. $k  ?>" name="pprice_<?php echo $bill_table. $k  ?>"  value="<?php echo $row_item['price']; ?>"> 
-                                                                </div>
-                                                                <?php
-                                                                    $subtotal = $row_item['quantity'] * $row_item['price'];
-                                                                ?>
-                                                                <div class="pstotal flex-fill bd-highlight">
-                                                                    <?php echo $subtotal; ?>
-                                                                    <input type="hidden" id="psubtotal_<?php echo $bill_table. $k  ?>" name="psubtotal_<?php echo $bill_table. $k  ?>"  value="<?php echo $subtotal; ?>"> 
-                                                                </div>
-                                                                <!--<div class="prodstatus flex-fill bd-highlight">-->
-                                                                   
-                                                                    <input type="hidden" id="pstatus_<?php echo $bill_table. $k  ?>" name="pstatus_<?php echo $bill_table. $k  ?>"  value="<?php echo $row_item['status']; ?>">
-                                                                <!--</div>-->
+                                                        <div class="containeritem d-flex bd-highlight">
+                                                            <div class="prodname flex-fill bd-highlight">
+                                                                <?php echo $row_item['product_name']; ?>
+                                                                <input type="hidden" id="pname_<?php echo $bill_table . $k; ?>" name="pname_<?php echo $bill_table . $k; ?>" value="<?php echo $row_item['product_name']; ?>">
                                                             </div>
+                                                            <div class="pquantity flex-fill bd-highlight">
+                                                                <?php echo $row_item['quantity']; ?>
+                                                                <input type="hidden" id="pquantity_<?php echo $bill_table . $k; ?>" name="pquantity_<?php echo $bill_table . $k; ?>" value="<?php echo $row_item['quantity']; ?>">
+                                                            </div>
+                                                            <div class="pprice flex-fill bd-highlight">
+                                                                <?php echo $row_item['price']; ?>
+                                                                <input type="hidden" id="pprice_<?php echo $bill_table . $k; ?>" name="pprice_<?php echo $bill_table . $k; ?>" value="<?php echo $row_item['price']; ?>">
+                                                            </div>
+                                                            <div class="pstotal flex-fill bd-highlight">
+                                                                <?php echo $usersubtotal; ?>
+                                                                <input type="hidden" id="psubtotal_<?php echo $bill_table . $k; ?>" name="psubtotal_<?php echo $bill_table . $k; ?>" value="<?php echo $usersubtotal; ?>">
+                                                            </div>
+                                                        </div>
                                                         <?php
-                                                        }
                                                     }
-                                                    ?>
-                                                </div>
-                                                
+                                                }
+                                                ?>
+                                            </div>
                                             <?php
                                         }
-
-                                    
                                     }
-                                }
-                                else{
+                                } else {
                                     echo "NO ORDERS AT THE MOMENT";
                                 }
                                 ?>
-                                 <!--this is the amount per customer-->
-                                    <h3 class="useramt"> 
-                                        Amount: <span> <?php //echo $total_user; ?> </span>
-                                        <input type="text" readonly id="usertotal_<?php echo $bill_table. $k  ?>" name="usertotal_<?php echo $bill_table. $k  ?>"  value="<?php echo $total_user; ?>">
-                                    </h3>
+                                <h3 class="useramt"> 
+                                    Amount: <span><?php echo $total_user; ?></span>
+                                    <input type="text" readonly id="usertotal_<?php echo $bill_table . $k; ?>" name="usertotal_<?php echo $bill_table . $k; ?>" value="<?php echo $total_user; ?>">
+                                </h3>
                                 <?php
-                                
-                            } 
+                            }
                             ?>
-                             <!--<input type="text" id="increment_<echo $bill_table . $k ?>" name="" value="<echo $bill_table. $k; ?>"-->
                             <?php
-                                $sql_bill_pool = "SELECT COUNT(*) as table_payment FROM pool_accepted WHERE table_number = $bill_table";
-                                $result_bill_pool = $connection->query($sql_bill_pool);
-                                if ($result_bill_pool->num_rows > 0) {
-                                    
-                                    $row_bill_pool = $result_bill_pool->fetch_assoc();
-                                    $bill_pool =  $row_bill_pool['table_payment'];
-                                    $total_pool = 150 * $bill_pool;
-
-                                    $poolprice = 150;
-                                    echo "<p class='pooltotal'>Table Pool: ". $poolprice."x".$bill_pool."=".$total_pool . "</p>";
-                                    ?>
-                                    <input  type="hidden" id="num_user_<?php echo $bill_table ?>" name="num_user_<?php echo $bill_table ?>" value="<?php echo $k; ?>">
-                                        <input type="hidden" id="pool_<?php echo $bill_table ?>" value="<?php echo $total_pool ?>">
-                                    <?php
-                                }
-                                        
+                            $sql_bill_pool = "SELECT COUNT(*) as table_payment FROM pool_accepted WHERE table_number = $bill_table";
+                            $result_bill_pool = $connection->query($sql_bill_pool);
+                            if ($result_bill_pool->num_rows > 0) {
+                                $row_bill_pool = $result_bill_pool->fetch_assoc();
+                                $bill_pool = $row_bill_pool['table_payment'];
+                                $total_pool = 150 * $bill_pool;
+                                ?>
+                                <p class="pooltotal">Table Pool: 150 x <?php echo $bill_pool; ?> = <?php echo $total_pool; ?></p>
+                                <input type="hidden" id="num_user_<?php echo $bill_table; ?>" name="num_user_<?php echo $bill_table; ?>" value="<?php echo $k; ?>">
+                                <input type="hidden" id="pool_<?php echo $bill_table; ?>" value="<?php echo $total_pool; ?>">
+                                <?php
+                            }
                             ?>
-                                
                         </form>
-
-                            <?php
-                        
-                        }
-                        
-                        else{
-                            echo "NO ORDERS AT THE MOMENT";
-                        }
-                        
+                        <?php
+                    } else {
+                        echo "NO ORDERS AT THE MOMENT";
+                    }
                     ?>
-                    </div>
-      
-                    <!--it is the total overll_amount of all the customers within that table-->
-                    <div class="totalamt">
-                        <p id="overalltotal_<?php echo $bill_table;  ?>" name = "overalltotal_<?php echo $bill_table; ?>">Total Amount: </p><!--Overall total amout per table-->
-                        <input type="hidden" name="inputoveralltotal_<?php echo $bill_table;  ?>" id="inputoveralltotal_<?php echo $bill_table;  ?>"> 
-                        <input type="hidden" name="countvalidid_<?php echo $bill_table;  ?>" id="countvalidid_<?php echo $bill_table;  ?>" value="0">
-                    <!-- Update the buttons with IDs -->
+                </div>
+                <div class="totalamt">
+                    <p id="overalltotal_<?php echo $bill_table; ?>">Total Amount: </p>
+                    <input type="hidden" name="inputoveralltotal_<?php echo $bill_table; ?>" id="inputoveralltotal_<?php echo $bill_table; ?>">
+                    <input type="hidden" name="countvalidid_<?php echo $bill_table; ?>" id="countvalidid_<?php echo $bill_table; ?>" value="0">
                     <button class="btn btn-primary w-100 btnpay" id="doneButton" name="btnpay">Done</button>
                     <button class="btn btn-secondary w-100" id="printButton" onclick="printBill('<?php echo $bill_table; ?>')">Print Bill</button>
                 </div>
-<?php
+            </div> <!-- Close col div -->
+            <?php
+        }
+    } else {
+        echo "<p class='emptyword'>No tables requesting bill out.</p>";
+        echo "<img class='emptypic' src='Pic/emptybill.svg' alt=''>";
     }
-}
-else{
-    echo "<p class='emptyword'></p>";
-    echo " <img class='emptypic' src='Pic/emptybill.svg' alt=''>";
-}
-?>
+    ?>
 </div>
+<!-- </div>
 </div>
-</div>
+</div> -->
 </body>
 
 <!-- JavaScript part -->
