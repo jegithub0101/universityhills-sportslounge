@@ -113,6 +113,10 @@ function getOrderStatusCounts($connection, $cid, $tracking) {
             overflow: hidden;
             box-shadow: var(--card-shadow);
             transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
         }
 
         .order-card:hover {
@@ -205,16 +209,16 @@ function getOrderStatusCounts($connection, $cid, $tracking) {
         }
 
         .btn-done {
-            width: 100%;
-            margin-top: 1rem;
-            padding: 0.75rem;
-            background-color: #22c55e;
-            color: white;
-            border-radius: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 700;
-        }
+    width: 100%;
+    margin-top: auto; /* Ensures the button is pushed to the end of the card */
+    padding: 0.75rem;
+    background-color: #22c55e;
+    color: white;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+}
         .btn-done:hover{
             background-color: #92E2B0;
         }
