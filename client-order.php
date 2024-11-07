@@ -1,16 +1,18 @@
 <?php
-
-
 session_start();
 
 $servername = "localhost";
 $username = "root";
 $password = "";
 $database = "university_hills";
-//Create Connection
+
+// Create Connection
 $connection = mysqli_connect($servername, $username, $password, $database);
 
-// Set the session variable to true to indicate that the user has visited the page
+// Check connection
+if ($connection->connect_error) {
+    die("Connection failed: " . $connection->connect_error);
+}
 
 function isbillout()
 {
@@ -26,20 +28,59 @@ if (isbillout()) {
     exit;
 }
 
-
-function isLoggedIn()
-{
-    return isset($_SESSION['table_number'] );
+// Check if the user is logged in
+function isLoggedIn() {
+    return isset($_SESSION['table_number']);
 }
 
 // Redirect to login page if not logged in
 if (!isLoggedIn()) {
+    session_unset();
+    session_destroy();
     header("Location: client-login.php");
+    exit;
+}
+
+$table_number = $_SESSION['table_number'];
+$table_name = $_SESSION['table_name'];
+
+// Adjust this query according to your actual table structure
+$sql_active = "SELECT active FROM customer WHERE table_number = $table_number AND nickname = '$table_name'";
+$result_active = $connection->query($sql_active);
+
+if ($result_active->num_rows > 0) {
+    $row_active = $result_active->fetch_assoc();
+    
+    // Debugging output to check the value of active
+    error_log("Active value for table number $table_number: " . $row_active['active']);
+
+    // Check if active field is true (1) or not
+    if ($row_active['active'] !== 'trues') { // Ensure you're comparing with an integer
+        session_unset();
+        session_destroy();
+
+        session_start();
+        $_SESSION['billout'] = true;
+        $_SESSION['table_name'] = $table_name;
+        header("Location: client-comment.php");
+        
+        exit;
+    }
+   
+} else {
+    // If no customer found, destroy session and redirect
+    session_unset();
+    session_destroy();
+    session_start();
+    $_SESSION['billout'] = true;
+    $_SESSION['table_name'] = $table_name;
+    header("Location: client-comment.php");
     exit;
 }
 
 $_SESSION['billout'] = true;
 
+// Your existing code to run the system goes here
 
 // Check if there are orders with "Done" status
 $sql_done_orders = "SELECT COUNT(*) AS done_count FROM admin_order WHERE status = 'Done'";
@@ -49,105 +90,6 @@ $done_count = $row_done_orders['done_count'];
 
 ?>
 
-<style>
-
-        .navbar{
-            display:none
-        }
-        .main-content{
-            height: 100vh;
-            overflow-x: hidden;
-            
-            padding-right: 1%;
-
-        }
-        h3{
-            text-align: center;
-        }
-        
-        .cards{
-            background-color: white;
-            height: 650px;
-            border: 1px solid gray;
-            border-radius: 10px;
-            overflow-y: auto;
-            overflow-x: hidden ;
-           
-            position: relative;
-            padding: 4%;
-           
-        }
-
-        .containerorder{
-            margin-bottom: 4px;
-            height: auto;
-            border-bottom: 1px solid #1F1F1F;
-            
-        }
-        .containeritem{
-            height: auto;
-            width: 100%;
-            margin-bottom: 1%;
-            
-           
-        }
-
-        .prodnameh, .prodstatush, .pquantityh, .ppriceh ,.pstotalh{
-            font-weight: 700;
-        }
-        .name{
-            color: white;
-            text-align: center;
-            font-weight: 500;
-            background-color: #1F1F1F;
-            border: 1px solid #1F1F1F
-        }
-       
-        .requestbill{
-            border: none;
-            margin-bottom: 2%;
-            margin-left: 87%;
-        }
-        
-       
-        .flex-fill{
-            width: 20%;
-        }
-        
-       
-    
-    @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-            .navbar-toggler{
-                height: 30px;
-                padding-top: 0px;
-            }
-            .navbar-toggler-icon{
-                font-size: 8pt;
-                margin-top: 0px;
-            }
-            
-        }
-        @media (max-width: 732px) {
-            .navbar-brand{
-                font-size: 13pt;
-            }
-
-        }
-</style>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -167,243 +109,261 @@ $done_count = $row_done_orders['done_count'];
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-
+    <link rel="icon" href="Pic/logo.svg" type="image/x-icon">
     <link rel="stylesheet" href="css/sidebar.css">
+
+    
+<style>
+
+.main-content{
+    height: 100vh;
+    overflow-x: hidden;
+    
+    padding-right: 1%;
+
+}
+h3{
+    text-align: center;
+}
+
+.cards{
+    background-color: white;
+    height: 650px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    overflow-y: auto;
+    overflow-x: hidden ;
+   
+    position: relative;
+    padding: 4%;
+   
+}
+
+.containerorder{
+    margin-bottom: 4px;
+    height: auto;
+    border-bottom: 1px solid #1F1F1F;
+    
+}
+.containeritem{
+    height: auto;
+    width: 100%;
+    margin-bottom: 1%;
+    
+   
+}
+
+.prodnameh, .prodstatush, .pquantityh, .ppriceh ,.pstotalh{
+    font-weight: 700;
+}
+.name{
+    color: white;
+    text-align: center;
+    font-weight: 500;
+    background-color: #1F1F1F;
+    border: 1px solid #1F1F1F
+}
+
+.requestbill{
+    border: none;
+    margin-bottom: 2%;
+    margin-left: 87%;
+}
+
+
+.flex-fill{
+    width: 20%;
+}
+
+
+
+
+
+@media (max-width: 732px) {
+    .navbar-brand{
+        font-size: 13pt;
+    }
+
+}
+</style>
+
+
+
+
+<style>
+    /* Apply Arial font to all elements */
+    * {
+        font-family: Arial, sans-serif;
+    }
+
+    /* Main content styles */
+    .main-content {
+        height: 100vh;
+        overflow-x: hidden;
+        padding-right: 1%;
+        background-color: #eaeaea; /* Light gray background for the main content */
+    }
+
+    /* Header styles */
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333; /* Darker color for contrast */
+        font-size: 2.5em;
+        text-transform: uppercase; /* Uppercase for emphasis */
+        letter-spacing: 1px; /* Spacing between letters */
+    }
+
+    /* Connection styles */
+    .conn {
+        margin-left: 3%;
+    }
+
+    /* Card styles */
+    .cards {
+        background-color: #fff;
+        height: 650px;
+        border: 1px solid #ddd; /* Softer border color */
+        border-radius: 10px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        margin-left: 10px;
+        position: relative;
+        padding: 20px; /* Increased padding for better layout */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Subtle shadow effect */
+    }
+
+    /* Order container styles */
+    .containerorder {
+        margin-bottom: 4px;
+        height: auto;
+        border-bottom: 1px solid #ddd; /* Softer border for items */
+        padding: 10px 0; /* Added padding for spacing */
+        transition: background-color 0.3s; /* Smooth transition for hover */
+    }
+
+    .containerorder:hover {
+        background-color: #f2f2f2; /* Light gray hover effect */
+    }
+
+    /* Item container styles */
+    .containeritem {
+        height: auto;
+        width: 100%;
+        margin-bottom: 1%;
+    }
+
+    /* Header styles for product details */
+    .prodnameh,
+    .prodstatush,
+    .pquantityh,
+    .ppriceh,
+    .pstotalh {
+        font-weight: 700;
+        color: #1F1F1F; /* Consistent header color */
+    }
+
+    /* Name styles */
+    .name {
+        color: white;
+        text-align: center;
+        font-weight: 500;
+        background-color: #2c3e50; /* Darker blue for consistency */
+        border: 1px solid #2c3e50;
+        padding: 10px; /* Added padding for better layout */
+        border-radius: 5px; /* Rounded corners */
+        margin-bottom: 15px; /* Spacing below the name box */
+    }
+
+    /* Button styles */
+    .requestbill {
+        border: none;
+        background-color: #008CBA; /* Bright red color for prominence */
+        color: white;
+        padding: 15px 30px; /* Increased padding for a larger button */
+        border-radius: 5px;
+        font-size: 1.2em; /* Larger font size */
+        transition: background-color 0.3s ease, transform 0.2s ease; /* Transition for hover effect */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Shadow for button */
+        position: fixed; /* Fixed position */
+        bottom: 20px; /* Distance from the bottom */
+        right: 35px; /* Distance from the right */
+        z-index: 1000; /* Ensure it's above other content */
+    }
+
+    .requestbill:hover {
+        background-color: #555555;
+        transform: scale(1.05); /* Slightly enlarge on hover */
+    }
+
+    /* Flex container styles */
+    .flex-fill {
+        width: 20%;
+    }
+
+    /* Modal styles */
+    .modal-content {
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+        background-color: #1F1F1F; /* Dark background for modal header */
+        color: white;
+        border-bottom: none; /* No border for header */
+    }
+
+    .modal-title {
+        margin: 0;
+    }
+
+    .modal-body {
+        padding: 20px;
+        text-align: center;
+    }
+</style>
 
 </head>
 <body>
 
-
-
-
-    <nav class="navbar navbar-dark bg-dark fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">University Hills Sport Lounge</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li class="nav-item">
-                    <a class="nav-link" href="client-product.php">Client Panel</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="client-cart.php">My Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active"  aria-current="page"href="client-order.php">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link "  href="client-concern.php">Report Concern</a>
-                </li>
-                
-            </ul>
-        </div>
-        </div>
-    </div>
-    </nav>
-
-
-
-    <div class="sidebar">
-        <div class="top">
-            <i class="bx bx-menu" id="btn"></i>
-            
-           
-            
-        </div>
-        <div class="user">
-            <img src="Pic/logo.png" alt="me" class="user-img">
-            <div class="logo">
-                <span>University Hills</span>
-            </div>
-            <div>
-                <p class="bold">Welcome, Table <?php echo $_SESSION['table_number']; ?></p>
-                <p class="nickname"> <?php echo $_SESSION['table_name']; ?></p>
-            </div>
-        </div>
-                
-            <div class="lii">
-                <a href="client-product.php">
-                        <i class="bx bxs-shopping-bag"></i>
-                        <span class="nav-item">Order</span>
-                </a>
-                <span class="tooltip">Order</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-cart.php">
-                <i class="fa-solid fa-cart-plus"></i>
-                    <span class="nav-item">Cart</span>
-                </a>
-                <span class="tooltip">Your Cart</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-order.php">
-                <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="nav-item">Orders</span>
-                </a>
-                <span class="tooltip">Orders</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-concern.php">
-                <i class="fa-solid fa-exclamation-triangle"></i>
-                    <span class="nav-item">Concern</span>
-                </a>
-                <span class="tooltip">Submit Concern</span>
-            </div>
-
-    </div>
-
-    <style>
-       
-        .navbar{
-            display:none
-        }
-        .main-content{
-            height: 100vh;
-            overflow-x: hidden;
-            
-            padding-right: 1%;
-
-        }
-        h3{
-            text-align: center;
-        }
-        .conn{
-            margin-left: 3%;
-        }
-
-        .cards{
-            background-color: white;
-            height: 650px;
-            border: 1px solid gray;
-            border-radius: 10px;
-            overflow-y: auto;
-            overflow-x: hidden ;
-            margin-left: 10px;
-            position: relative;
-            padding: 4%;
-           
-        }
-
-        .containerorder{
-            margin-bottom: 4px;
-            height: auto;
-            border-bottom: 1px solid #1F1F1F;
-            
-        }
-        .containeritem{
-            height: auto;
-            width: 100%;
-            margin-bottom: 1%;
-            
-           
-        }
-
-        .prodnameh, .prodstatush, .pquantityh, .ppriceh ,.pstotalh{
-            font-weight: 700;
-        }
-        .name{
-            color: white;
-            text-align: center;
-            font-weight: 500;
-            background-color: #1F1F1F;
-            border: 1px solid #1F1F1F
-        }
-        /* .prodname{
-            width: 100%;
-       
-            float: left;
-            height: 100%;
-            border-right: 1px solid #1F1F1F;
-            background-color: pink;
-
-        } */
-        /* .prodstatus{
-            height: 100%;
-            text-align: center;
-            background-color: yellow;
-            width: 10%;
-            float: right;
-        } */
-        /* .white{
-            background-color: #1F1F1F;
-            position: absolute;
-            bottom: 0px;
-            width: 100;
-
-        } */
-        .requestbill{
-            border: none;
-            margin-bottom: 2%;
-            margin-left: 87%;
-        }
-        
-        /* .pprice{
-            width: 10%;
-            float: left;
-        } */ 
-        .flex-fill{
-            width: 20%;
-        }
-        
-       
-
-    </style>
-
     <?php
-    $table_number =  $_SESSION['table_number'];
-    $table_name = $_SESSION['table_name'];
-    
-    $sql_cid = "SELECT cid FROM customer WHERE table_number = $table_number and nickname = '$table_name'";
-    $result_cid = $connection->query($sql_cid);
-    $row_cid = $result_cid->fetch_assoc();
-    $cid = $row_cid['cid'];
-
-    
-
+        require 'client-sidebar.php';
     ?>
 
+<?php
+$table_number = $_SESSION['table_number'];
+$table_name = $_SESSION['table_name'];
 
+$sql_cid = "SELECT cid FROM customer WHERE table_number = $table_number and nickname = '$table_name'";
+$result_cid = $connection->query($sql_cid);
+$row_cid = $result_cid->fetch_assoc();
+$cid = $row_cid['cid'];
+?>
 
-        
-    <div class="main-content">
-        <div class="container-fluid">
-            <h1>Orders</h1>
-            <button name="requestbill" id="requestbill" class="requestbill btn btn-primary">BILL OUT</button>
-            <div id="link_wrapper">
+<div class="main-content">
+    <div class="container-fluid">
+        <h1>Orders</h1>
+        <div id="link_wrapper"></div>
 
-
-
+        <!-- Modal -->
+        <div class="modal fade" id="billingOutModal" tabindex="-1" aria-labelledby="billingOutModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="billingOutModalLabel">Waiting for confirmation for billing out...</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Please wait while we process your request...
+                    </div>
+                </div>
             </div>
-            <!-- Modal -->
-<div class="modal fade" id="billingOutModal" tabindex="-1" aria-labelledby="billingOutModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="billingOutModalLabel">Waiting for confirmation for billing out...</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Please wait while we process your request...
-      </div>
-      <!-- You can add additional content to the modal body if needed -->
+        </div>
     </div>
-  </div>
+
+    <button name="requestbill" id="requestbill" class="requestbill">Bill Out</button>
 </div>
 
-        </div>  
-    </div>
-
-    
   
 </body>
 

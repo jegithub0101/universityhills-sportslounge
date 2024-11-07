@@ -1,0 +1,263 @@
+/* Change scrollbar width */
+.sidebar::-webkit-scrollbar {
+    width: 1px; /* Set your desired width */
+}
+
+/* Change scrollbar track color */
+.sidebar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Change scrollbar handle color */
+.sidebar::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Change scrollbar handle on hover */
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.user-img{
+    width: 70%;
+    background-color: #eee;
+
+    margin-top: 50px;
+    margin-left: 10%;
+    margin-right: 15%;
+    border-radius: 100%;
+    float: none;
+}
+.sidebar.active .user .user-img{
+    margin-top: 17%;
+}
+
+.sidebar{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 80px;
+    background-color: #12171e;
+    padding: .4em .8rem;
+    transition: all 0.5s ease;
+}
+
+.sidebar.active ~ .main-content{
+    left: 250px;
+    width: calc(100% - 250px);
+}
+
+.sidebar.active{
+    width: 250px;
+}
+.sidebar #btn{
+    position: absolute;
+    color: #fff;
+    top: .4rem;
+    left: 50%;
+    font-size: 1.24rem;
+    line-height: 50px;
+    transform: translateX(-50%);
+    cursor: pointer;
+}
+
+.sidebar.active #btn{
+    left: 90%
+}
+
+.sidebar .user .logo{
+    color: #fff;
+    display: flex;
+    height: 50px;
+    width: 100%;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    clear: both;
+    margin-left:20% ;
+    
+}
+.sidebar.active .user .logo{
+    opacity: 1;
+}
+
+.top .logo i{
+    font-size:2rem;
+    margin-right: 5px;
+
+}
+
+.user{
+    margin: 1rem 0;
+}
+
+.user p{
+    color:white;
+    opacity: 1;
+    margin-left: 1rem;
+}
+
+.user .bold{
+    font-weight: 600;
+    margin-top: 0%;
+
+
+}
+
+.sidebar p{
+    opacity: 0;
+}
+.sidebar.active p{
+    opacity: 1;
+}
+
+.imglogo{
+    width: 70%;
+    background-color: #eee;
+
+    margin-top: 15%;
+    margin-left: 10%;
+    margin-right: 15%;
+    border-radius: 100%;
+    display: none;
+    
+}
+.sidebar.active .top .imglogo{
+    display: block;
+    opacity: 1;
+}
+
+.sidebar .user .logo{
+    display: none;
+}
+.sidebar.active .user .logo{
+    display: block;
+    margin-top: 10%;
+}
+.sidebar.active .user .bold{
+    margin-bottom: 3%;
+    border-bottom: 2px solid white;
+    padding-left: 8%;
+    padding-right: 5%;
+    padding-bottom: 12%;
+    width: 80%;
+    
+}
+
+/** */
+
+.sidebar {
+
+    overflow-y: auto; /* Enable vertical scrollbar */
+    overflow-x: hidden;
+}
+
+
+.sidebar .lii{
+    position: relative;
+    list-style-type: none;
+    height: 50px;
+    width: 90%;
+    margin: 0.8rem auto;
+    line-height: 50px;
+    
+}
+
+.sidebar .lii a{
+    color: #fff;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 0.8rem;
+}
+
+.sidebar .lii a:hover{
+    background-color: #fff;
+   color: #12171e;
+}
+
+.sidebar .lii a i{
+    min-width: 50px;
+    text-align: center;
+    height: 50px;
+    border-radius: 12px;
+    line-height: 50px;
+}
+.sidebar .nav-item {
+    opacity: 0;
+}
+.sidebar.active .nav-item{
+    opacity: 1;
+}
+
+.sidebar .lii .tooltip{
+    position: absolute;
+    left: 125px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0.5rem 0.8rem rgba(0, 0, 0, 0.21);
+    border-radius: .6rem;
+    padding: .4rem 1.2rem;
+    line-height: 1.8rem;
+    z-index: 20;
+    opacity: 0;
+    background-color: #12171e;
+    color: white;
+}
+
+.sidebar .lii:hover .tooltip{
+    opacity: 1;
+}
+.sidebar.active .lii .tooltip{
+    display: none;
+}
+
+.main-content{
+    position: relative;
+    background-color: #eee;
+    min-height: 100vh;
+    top:0;
+    left:80px;
+    transition: all 0.5s ease;
+    width: calc(100% - 80px);
+    padding: 1rem;
+}
+
+.sidebar .lii .logout-button {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 100%;
+    border-radius: 0.8rem;
+}
+
+.sidebar .lii .logout-button:hover {
+    background-color: #fff;
+    color: #12171e;
+}
+
+.sidebar .lii .logout-button i {
+    font-size: 1.24rem;
+    line-height: 50px;
+}
+
+.sidebar .lii .logout-button:focus {
+    outline: none;
+}
+
+

@@ -281,9 +281,6 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST'){
                                 
                             </label>
 
-
-                            <p class="signup lead">If you are not a staff, login with <a href="admin-login.php">Admin Account</a> to continue. </p>
-
                             <button>Login</button>
                         </form>
 

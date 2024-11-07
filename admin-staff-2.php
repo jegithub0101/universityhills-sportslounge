@@ -50,10 +50,14 @@ if($connection->connect_error){
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updateProductBtn'])) {
     // Retrieve form data
     $updateStaffId = $_POST['updateStaffId'];
-    $updateStaffName = $_POST['updateStaffName'];
-    $updateStaffPosition = $_POST['updateStaffPosition'];
-    $updateStaffEmail = $_POST['updateStaffEmail'];
-    $updateStaffPhone = $_POST['updateStaffPhone'];
+    $updatefName = $_POST['updatefName'];
+    $updatemName = $_POST['updatemName'];
+    $updatelName = $_POST['updatelName'];
+    $updateposition = $_POST['updateStaffPosition'];
+    $updategender = $_POST['updategender'];
+    $updateaddress = $_POST['updateaddress'];
+    $updatebirthday = $_POST['updatebirthday'];
+
 
     // Check if image file is uploaded
     if (isset($_FILES['update_image']) && $_FILES['update_image']['error'] === UPLOAD_ERR_OK) {
@@ -70,9 +74,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updateProductBtn'])) {
             $imageContent = file_get_contents($updateimage);
 
             // Prepare the SQL statement with placeholders
-            $sql = "UPDATE staff SET name=?, position=?, email=?, phone=?, image=? WHERE SID=?";
+            $sql = "UPDATE account SET firstname=?, middlename=?, lastname=?, type=?, gender=?, address=?, birthday=?, pic=? WHERE id=?";
             $stmt = mysqli_prepare($connection, $sql);
-            mysqli_stmt_bind_param($stmt, "sssssi", $updateStaffName, $updateStaffPosition, $updateStaffEmail, $updateStaffPhone, $imageContent, $updateStaffId);
+            mysqli_stmt_bind_param($stmt, "ssssssssi", $updatefName, $updatemName, $updatelName, $updateposition, $updategender, $updateaddress, $updatebirthday, $imageContent, $updateStaffId);
 
             // Execute the prepared statement
             if (mysqli_stmt_execute($stmt)) {
@@ -90,10 +94,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updateProductBtn'])) {
         }
     } else {
         // No image uploaded, update without image
-        $sql = "UPDATE staff SET name=?, position=?, email=?, phone=?, image=? WHERE SID=?";
+        $sql = "UPDATE account SET firstname=?, middlename=?, lastname=?, type=?, gender=?, address=?, birthday=? WHERE id=?";
         $stmt = mysqli_prepare($connection, $sql);
-        mysqli_stmt_bind_param($stmt, "sssssi", $updateStaffName, $updateStaffPosition, $updateStaffEmail, $updateStaffPhone, $imageContent, $updateStaffId);
-        
+        mysqli_stmt_bind_param($stmt, "sssssssi", $updatefName, $updatemName, $updatelName, $updateposition, $updategender, $updateaddress, $updatebirthday, $updateStaffId);
+
         // Execute the prepared statement
         if (mysqli_stmt_execute($stmt)) {
             echo "Staff updated successfully";
@@ -114,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     if(isset($_POST['deleteProductBtn'])){
         $deleteStaffId = $_POST['deleteStaffId'];
         
-        $sql = "DELETE from staff where SID=?";
+        $sql = "DELETE from account where id=?";
         $stmt = mysqli_prepare($connection, $sql);
         mysqli_stmt_bind_param($stmt, "i", $deleteStaffId);
 
@@ -626,115 +630,343 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                 font-size: 8pt;
                 margin-top: 0px;
             }
+
+
         }
+
+ 
             </style>
-<style>
-.card-container {
-    display: flex;
-    flex-wrap: nowrap; /* Prevents wrapping to the next line */
-    justify-content: flex-start;
-    gap: 20px;
-    padding: 20px;
-    overflow-x: auto; /* Enables horizontal scrolling if cards exceed the container width */
-}
 
-.card {
-    flex: 0 0 auto; /* Ensures cards maintain their defined width */
-    max-width: 250px;
-    min-width: 200px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-    display: flex;
-    flex-direction: column;
-}
+            <form action="" method="GET" class="form1 sticky-top">
+                <div class="search">
+                    <input type="text" class="inputsearch" name="search" placeholder="Search...">
+                    <button type="submit" class=" searchbutton" name="searchbutton"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
 
-.card:hover {
-    transform: translateY(-5px);
-}
+                <button class="refresh btn" id="refresh" name="refreshbtn">
+                    <i class='bx bx-refresh'></i>
+                </button>
 
-.card-img-top {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
+                <select id="position" name="position" class="category" >
+                    <option class="categoryoption" value="" disabled selected>Position</option>
+                        <?php
+                            $sql = "SELECT position_name FROM staff_positions";
 
-.card-body {
-    padding: 15px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
+                            $result = $connection->query($sql);
+                            if(!$result){
+                                die("Invalid query: ". $connection->connect_error);
+                            }
 
-.card-title {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
+                            while($row = $result->fetch_assoc()){
+                                echo"
+                                <option class='categoryoption' value='$row[position_name]'>$row[position_name]</option>
+                                ";
+                            }
+                        ?>
 
-.card-text {
-    font-size: 14px;
-    margin-bottom: 5px;
-}
+                        <?php ob_end_flush(); ?>
+                </select>
 
-@media (max-width: 1200px) {
-    .card {
-        flex: 0 0 auto; /* Keeps cards from resizing on medium screens */
-    }
-}
+            
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary addbutton" data-bs-toggle="modal" data-bs-target="#categoryModal">
+                        +Position
+                </button>
+                <button type="button" class="btn btn-primary addbutton" data-bs-toggle="modal" data-bs-target="#ProductModal">
+                    +Staff
+                </button>
 
-@media (max-width: 900px) {
-    .card {
-        flex: 0 0 auto; /* Keeps cards from resizing on smaller screens */
-    }
-}
-
-@media (max-width: 600px) {
-    .card {
-        flex: 0 0 auto; /* Keeps cards from resizing on mobile */
-    }
-}
-</style>
-
-<?php
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "university_hills";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Query to get records with type 'staff'
-$sql = "SELECT firstname, lastname, address, birthday, gender, pic FROM account WHERE type = 'staff'";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // Loop through the records
-    while($row = $result->fetch_assoc()) {
-        // Display data in a card layout
-        echo "<div class='card'>";
-        echo "<img src='data:image/jpeg;base64,".base64_encode($row['pic'])."' alt='Profile Picture' class='card-img-top'>";
-        echo "<div class='card-body'>";
-        echo "<h5 class='card-title'>" . htmlspecialchars($row['firstname']) . " " . htmlspecialchars($row['lastname']) . "</h5>";
-        echo "<p class='card-text'><strong>Address:</strong> " . htmlspecialchars($row['address']) . "</p>";
-        echo "<p class='card-text'><strong>Birthday:</strong> " . htmlspecialchars($row['birthday']) . "</p>";
-        echo "<p class='card-text'><strong>Gender:</strong> " . htmlspecialchars($row['gender']) . "</p>";
-        echo "</div>";
-        echo "</div>";
-    }
-} else {
-    echo "<p>No staff members found.</p>";
-}
+            </form>
 
 
-$conn->close();
-?>
+            <div class="container-fluid">
+                <div class="row f" >
+                    <div class="col-xl-12 c">
+                        <div class="row">
+                            
+                         <?php
+
+                $sql = "SELECT * FROM account where type='staff'";
+
+
+                if(isset($_GET['searchbutton'])) {
+                    $search = $_GET['search'];
+                    $sql = "SELECT * FROM staff WHERE name LIKE '%$search%' OR position LIKE '%$search%' OR email LIKE '%$search%' OR phone LIKE '%$search%'";
+                }
+
+                if(isset($_GET['refreshbtn'])){
+                    $sql = "SELECT * FROM staff";
+                    
+                }
+
+
+                $result = $connection->query($sql);
+                if(!$result){
+                    die("Invalid query: ". $connection->connect_error);
+                }
+
+                if($result->num_rows === 0) {
+                    echo "
+                       <div class='col-xl-12 colempty'>
+                       <img class ='empty' src='Pic/empty.svg' alt=''>
+                       </div
+                    ";
+                } else {
+
+                while($row = $result->fetch_assoc()){
+                    echo"
+                    <div class='showprodbox col-sm-12 col-md-12 col-lg-4 col-xl-2'>
+                    <div class='actionbutton'>";
+                    ?>
+                    <i  type='button' data-bs-toggle='modal' data-bs-target='#updateModal' class='fa-regular fa-pen-to-square edit' form='updateProductFormId' onclick="populateUpdateModal('<?php echo $row['id']; ?>', '<?php echo $row['firstname']; ?>','<?php echo $row['middlename']; ?>','<?php echo $row['lastname']; ?>', '<?php echo $row['type']; ?>', '<?php echo $row['gender']; ?>', '<?php echo $row['address']; ?>', '<?php echo $row['birthday']; ?>', '<?php echo base64_encode($row['pic']); ?>')"></i>
+                    <i  type='button' data-bs-toggle='modal' data-bs-target='#deleteModal' class='fa-solid fa-trash delete' form='deleteProductFormId' onclick="populatedeleteModal('<?php echo $row['id']; ?>', '<?php echo $row['firstname']; ?>','<?php echo base64_encode($row['pic']); ?>')"></i>
+                <?php
+                     echo   
+                     "
+                
+                    </div>
+                    <div class='crop-img'>";
+        
+                    $imageData = $row['pic'];
+
+                    // Convert binary data to base64 encoding
+                    $base64Image = base64_encode($imageData);
+
+                    // Generate a data URL to display the image
+                    $dataURL = 'data:image/jpeg;base64,' . $base64Image;
+                    
+                    echo "                   
+                    <img src='$dataURL' alt='' class='prodimg'>
+                    </div>
+                    <div class='details'>
+                        <div class='namedetail'>Name: $row[firstname] $row[lastname]</div>
+                        <div class='positiondetail'>Address: $row[address]</div>
+                        <div class='emaildetail'>Birthday: $row[birthday] </div>
+                        <div class='phonedetail'>Gender: $row[gender] </div>
+                    </div>
+                </div>";
+                }
+                }
+            ?>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+             <!--show products-->
+
+             <?php
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    if(isset($_POST['saveCategoryBtn'])) {
+                        $positionname = $_POST['positionname'];
+                        $sql = "INSERT INTO staff_positions (position_name) VALUES ('$positionname')";
+                        if ($connection->query($sql) === TRUE) {
+                            // Insertion successful, now fetch all categories again
+                            $sql_fetch_positions = "SELECT position_name FROM staff_positions";
+                            $result_positions = $connection->query($sql_fetch_positions);
+                            if($result_positions) {
+                                // Clear existing options
+                                echo "<script>document.getElementById('position').innerHTML = ''; </script>";
+                                // Add new options
+                                while($row = $result_positions->fetch_assoc()){
+                                    echo "<script>document.getElementById('position').innerHTML += \"<option class='categoryoption' value='{$row['position_name']}'>{$row['position_name']}</option>\";</script>";
+                                }
+                            }
+                            echo " ";
+                        } else {
+                            echo "Error: " . $sql . "<br>" . $connection->error;
+                        }
+                    }
+                }
+            ?>
+
+            
+
+
+            <!-- Update Modal -->
+            <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Update Staff</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateProductForm" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
+                        <input type="hidden" id="updateStaffId" name="updateStaffId">
+                            <div class="mb-3">
+                            <input type="text" class="form-control" id="updatefName" name="updatefName" placeholder="Firstname">
+                            </div>
+
+                            <div class="mb-3">
+                            <input type="text" class="form-control" id="updatemName" name="updatemName" placeholder="Middlename">
+                            </div>
+
+                            <div class="mb-3">
+                            <input type="text" class="form-control" id="updatelName" name="updatelName" placeholder="Lastname">
+                            </div>
+
+                            <div class="mb-3">
+                                <select id="updateStaffPosition" name="updateStaffPosition" class="form-control">
+                                    <option value="" disabled selected>Position</option>
+                                    <option value='staff' >staff</option>;
+                                    <option value='admin' >admin</option>;
+                                </select>
+                            </div>
+
+
+                            
+
+                            <div class="mb-3">
+                                <select id="updategender" name="updategender" class="form-control">
+                                    <option value="" disabled selected>Gender</option>
+                                    <option value='male' >male</option>;
+                                    <option value='female' >female</option>;
+                                </select>
+                            </div>
+
+                                
+                                <div class="mb-3 ">
+                                    <input type="text" class="form-control" id="updateaddress" name="updateaddress" placeholder="Address">
+                                </div>
+                                <div class="mb-3 ">    
+                                    <input type="date" class="form-control" id="updatebirthday" name="updatebirthday" placeholder="Birthday" required>
+                                </div>
+                                <br><br> 
+                                <div class="mb-3 uploadimg">
+                                    <input type="file" id="updateproductImageInput" class="form-control fileupload" accept="image/*" onchange="updatepreviewImage(event)" name="update_image">
+                                    <img id="updateproductImagePreview" class="updateproductImagePreview" src="#" alt="Product Image Preview">
+                                </div>
+                                    
+                            </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="updateProductBtn"  name="updateProductBtn" form="updateProductForm">Save changes</button>
+                </div>
+                </div>
+            </div>
+            </div>
+
+
+            <!-- DELETE Modal -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Staff</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <form id="deleteProductForm" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
+                    <input type="hidden" id="deleteStaffId" name="deleteStaffId">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="deleteStaffName" disabled name="deleteStaffName" placeholder="Name">
+                    </div>
+                    <div class="mb-3">
+                        <img id="deleteproductImagePreview" class="deleteproductImagePreview" src="#" alt="Product Image Preview">
+                    </div>
+                </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary deleteproductImagePreview" id="deleteProductBtn" name="deleteProductBtn" form="deleteProductForm">Delete</button>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <script>
+            // Function to handle edit icon click
+            function populateUpdateModal(staffId, stafName, stafmName, staflName, position, gender, address, bday, imageData) {
+                // Populate values in the modal form fields
+                document.getElementById('updateStaffId').value = staffId;
+                document.getElementById('updatefName').value = stafName;
+                document.getElementById('updatemName').value = stafmName;
+                document.getElementById('updatelName').value = staflName;
+                document.getElementById('updateStaffPosition').value = position;
+                document.getElementById('updategender').value = gender;
+                document.getElementById('updateaddress').value = address;
+                document.getElementById('updatebirthday').value = bday;
+
+                // Handle image preview if available
+                if (imageData) {
+                    document.getElementById('updateproductImagePreview').src = 'data:image/jpeg;base64,' + imageData;
+                } else {
+                    document.getElementById('updateproductImagePreview').src = ''; // Clear the preview if no image
+                }
+            }
+
+             // Function to handle edit icon click
+        function populatedeleteModal(staffId, staffName, imageData) {
+                // Populate values in the modal form
+                document.getElementById('deleteStaffId').value = staffId;
+                document.getElementById('deleteStaffName').value = staffName;
+                document.getElementById('deleteproductImagePreview').src = 'data:image/jpeg;base64,' + imageData;
+        }
+
+        function capitalizeFirstLetter(input) {
+            return input.replace(/\b\w/g, function(char) { return char.toUpperCase(); });
+        }
+
+        document.getElementById('staffName').addEventListener('input', function() {
+            this.value = capitalizeFirstLetter(this.value);
+
+        });
+
+        document.getElementById('positionname').addEventListener('input', function() {
+            this.value = capitalizeFirstLetter(this.value);
+        });
+
+        document.getElementById('updateStaffName').addEventListener('input', function() {
+            this.value = capitalizeFirstLetter(this.value);
+        });
+
+
+        // Add event listener to the Position Name input field
+        document.getElementById('StaffPosition').addEventListener('input', function() {
+            this.value = capitalizeFirstLetter(this.value);
+        });
+
+        </script>   
+
+        <script>
+            let btn = document.querySelector('#btn');
+            let sidebar = document.querySelector('.sidebar');
+
+            btn.onclick = function () {
+                sidebar.classList.toggle('active');
+            };
+        </script>
+
+
+        <script>
+                function updatepreviewImage(event) {
+                var image = document.getElementById('updateproductImagePreview');
+                image.style.display = 'block';
+                image.src = URL.createObjectURL(event.target.files[0]);
+            }
+
+        </script>
+
+
+        <script>
+                function previewImage(event) {
+                var image = document.getElementById('productImagePreview');
+                image.style.display = 'block';
+                image.src = URL.createObjectURL(event.target.files[0]);
+            }
+        </script>
+
+            
+            
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+

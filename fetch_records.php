@@ -18,7 +18,7 @@ if(isset($_GET['sortDate'])) {
     $sortDate = $_GET['sortDate'];
     
     // Perform a database query to fetch records sorted by date
-    $query = "SELECT * FROM product_payment WHERE date = '$sortDate'";
+    $query = "SELECT payment_trackingno, pid, product_name, quantity, date, TIME_FORMAT(time, '%H:%i:%s') AS time FROM product_payment WHERE date = '$sortDate'";
     $result = mysqli_query($connection, $query);
     
     // Check if records were found
@@ -32,7 +32,7 @@ if(isset($_GET['sortDate'])) {
     }
 } else {
     // If sortDate parameter is not set, fetch all records
-    $query = "SELECT * FROM product_payment";
+    $query = "SELECT payment_trackingno, pid, product_name, quantity, date, TIME_FORMAT(time, '%H:%i:%s') AS time FROM product_payment";
     $result = mysqli_query($connection, $query);
     
     // Check if records were found

@@ -6,10 +6,13 @@ $username = "root";
 $password = "";
 $database = "university_hills";
 
-//Create Connection
+// Create Connection
 $connection = mysqli_connect($servername, $username, $password, $database);
 
-// Set the session variable to true to indicate that the user has visited the page
+// Check connection
+if ($connection->connect_error) {
+    die("Connection failed: " . $connection->connect_error);
+}
 
 function isbillout()
 {
@@ -25,19 +28,60 @@ if (isbillout()) {
     exit;
 }
 
-
-function isLoggedIn()
-{
-    return isset($_SESSION['table_number'] );
+// Check if the user is logged in
+function isLoggedIn() {
+    return isset($_SESSION['table_number']);
 }
 
 // Redirect to login page if not logged in
 if (!isLoggedIn()) {
+    session_unset();
+    session_destroy();
     header("Location: client-login.php");
     exit;
 }
 
+$table_number = $_SESSION['table_number'];
+$table_name = $_SESSION['table_name'];
+
+// Adjust this query according to your actual table structure
+$sql_active = "SELECT active FROM customer WHERE table_number = $table_number AND nickname = '$table_name'";
+$result_active = $connection->query($sql_active);
+
+if ($result_active->num_rows > 0) {
+    $row_active = $result_active->fetch_assoc();
+    
+    // Debugging output to check the value of active
+    error_log("Active value for table number $table_number: " . $row_active['active']);
+
+    // Check if active field is true (1) or not
+    if ($row_active['active'] !== 'trues') { // Ensure you're comparing with an integer
+        session_unset();
+        session_destroy();
+
+        session_start();
+        $_SESSION['billout'] = true;
+        $_SESSION['table_name'] = $table_name;
+        header("Location: client-comment.php");
+        
+        exit;
+    }
+} else {
+    // If no customer found, destroy session and redirect
+    session_unset();
+    session_destroy();
+    session_start();
+    $_SESSION['billout'] = true;
+    $_SESSION['table_name'] = $table_name;
+    header("Location: client-comment.php");
+    exit;
+}
+
 $_SESSION['billout'] = true;
+
+// Your existing code to run the system goes here
+
+
 
 // Check if the session variable is set
 if (!isset($_SESSION['table_number'])) {
@@ -102,7 +146,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link rel="icon" href="Pic/logo.svg" type="image/x-icon">
     <link rel="stylesheet" href="css/sidebar.css">
     <style>
         
@@ -118,37 +162,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin: 0% 5% 0% 5%;
         }
 
-        .navbar{
-            display:none
-        }
-
-        .navbar{
-                display:none
-            }
-        @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-            .navbar-toggler{
-                height: 30px;
-                padding-top: 0px;
-            }
-            .navbar-toggler-icon{
-                font-size: 8pt;
-                margin-top: 0px;
-            }
-        }
         .prodimg{
             max-width: 120px;
         }
@@ -192,21 +205,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
         @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-
             .container {
             padding: 15% 0% 0% 0%;
             }
@@ -226,112 +224,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </head>
 <body>
+    <?php
+        require 'client-sidebar.php';
+    ?>
 
-
-        <nav class="navbar navbar-dark bg-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">University Hills Sports Lounge</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                    <li class="nav-item">
-                    <a class="nav-link" href="client-product.php">Products</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="client-cart.php">Cart</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="client-order.php">Orders</a>
-                    </li>
-
-                    <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="client-concern.php">Report a Concern</a>
-                    </li>
-            </div>
-            </div>
-        </div>
-        </nav>
-
-
-
-        <div class="sidebar">
-        <div class="top">
-            <i class="bx bx-menu" id="btn"></i>
-            
-           
-            
-        </div>
-        <div class="user">
-            <img src="Pic/logo.png" alt="me" class="user-img">
-            <div class="logo">
-                <span>University Hills</span>
-            </div>
-            <div>
-                <p class="bold">Welcome, Table <?php echo $_SESSION['table_number']; ?></p>
-                <p class="nickname"> <?php echo $_SESSION['table_name']; ?></p>
-            </div>
-        </div>
-                
-            <div class="lii">
-                <a href="client-product.php">
-                        <i class="bx bxs-shopping-bag"></i>
-                        <span class="nav-item">Order</span>
-                </a>
-                <span class="tooltip">Order</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-cart.php">
-                <i class="fa-solid fa-cart-plus"></i>
-                    <span class="nav-item">Cart</span>
-                </a>
-                <span class="tooltip">Your Cart</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-order.php">
-                <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="nav-item">Orders</span>
-                </a>
-                <span class="tooltip">Orders</span>
-            </div>
-
-            <div class="lii">
-                <a href="client-concern.php">
-                <i class="fa-solid fa-exclamation-triangle"></i>
-                    <span class="nav-item">Concern</span>
-                </a>
-                <span class="tooltip">Submit Concern</span>
-            </div>
-
-            <?php
-            function isAssist()
-            {
-                return isset($_SESSION['staff_access'] );
-            }
-
-            if (isAssist()) {
-                ?>
-                <div class="lii">
-                    <a href="staff-assist.php">
-                        <i class="fa-solid fa-hands-helping"></i>
-                        <span class="nav-item">Assist</span>
-                    </a>
-                    <span class="tooltip">Staff-Assist </span>
-                </div>
-                <?php
-            }
-            ?>
-
-    </div>
-        <?php
+    <?php
     // Check if the success message is set in the session
     if (isset($_SESSION['success_message'])) {
         $success_message = $_SESSION['success_message'];
@@ -341,6 +238,107 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             alert("<?php echo $success_message; ?>");
         </script>
     <?php } ?>
+
+    <style>
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2; /* Same background as admin history */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 50px;
+            padding: 20px;
+        }
+
+        .uhlogo img {
+            width: 150px;
+            height: auto;
+            border-radius: 50%; /* Make logo circular */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff; /* White background for the card */
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .card-title {
+            font-family: Arial, sans-serif;
+            font-size: 30px;
+            text-align: center;  /* Horizontally center the text */
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 18px;
+            
+            color: #333;
+        }
+
+        textarea.form-control {
+            border-radius: 5px;
+            border: 1px solid #555555; /* Green border */
+            padding: 15px;
+            font-size: 16px;
+            background-color: #e7e7e7; color: black;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        textarea.form-control:focus {
+            border-color: #45a049; /* Darker green on focus */
+            background-color: #ffffff; /* White background on focus */
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Green shadow on focus */
+        }
+
+        button.btn-primary {
+            background-color: #555555; /* Change to a blue background */
+            border-color: #555555; /* Blue border */
+            width: 20%; /* Button width */
+            margin: 10px auto; /* Center align the button */
+            padding: 10px 0; /* Vertical padding for the button */
+            font-family: Arial, sans-serif;
+            font-size: 18px; /* Font size */
+
+            border-radius: 5px; /* Slightly rounded corners */
+            transition: background-color 0.3s ease-in-out; /* Smooth transition on hover */
+            color: #ffffff; /* White text color */
+            display: block; /* Make the button a block element for centering */
+        }
+
+        button.btn-primary:hover {
+            background-color: #e7e7e7; color: black;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .card {
+                margin: 15px;
+            }
+
+            .card-body {
+                padding: 20px;
+            }
+
+            button.btn-primary {
+                font-size: 16px;
+            }
+        }
+
+        .name {
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+            text-align: left;  /* Keep text left-aligned */
+        }
+    </style>
 
     <div class="container">
         <div class="row justify-content-center">
@@ -357,8 +355,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <h2 class="card-title">Customer's Concern</h2>
                          <form id="concernForm" method="post" action="submit-concern.php">
                             <div class="form-group">
-                                <label for="concernTextarea">Enter Your Concern:</label>
-                                <textarea class="form-control" id="concernTextarea" name="concern" rows="5" required></textarea>
+                                <label for="concernTextarea" class = "name">Enter Your Concern:</label>
+                                <textarea class="name form-control" id="concernTextarea" name="concern" rows="5" required></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>

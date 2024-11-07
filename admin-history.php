@@ -59,8 +59,10 @@ if (isset($_POST['logout'])) {
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-straight/css/uicons-bold-straight.css'>
     <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="icon" href="Pic/logo.svg" type="image/x-icon">
     <style>
         
 
@@ -68,301 +70,217 @@ if (isset($_POST['logout'])) {
             height: 100vh;
             overflow-x: hidden;
         }
-        .navbar{
-            display:none
-        }
-        @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-            .navbar-toggler{
-                height: 30px;
-                padding-top: 0px;
-            }
-            .navbar-toggler-icon{
-                font-size: 8pt;
-                margin-top: 0px;
-            }
-
-
-        }
-
-
 
     </style>
         
 
-<style>
-    /* Add custom styles here */
-    body {
-      background-color: #f8f9fa; /* Set background color */
-    }
-    .container {
-      max-width: 800px; /* Set maximum width for content */
-    }
-  </style>
+    <style>
+        /* Add custom styles here */
+        body {
+            background-color: #f8f9fa; /* Set background color */
+        }
+        .container {
+            max-width: 800px; /* Set maximum width for content */
+        }
+    </style>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            font-family: Arial, sans-serif;
+            max-width: 1500px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+
+        button {
+            width: 160px;  /* Common width */
+            height: 45px;  /* Common height */
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            line-height: 45px;  /* Vertically align text */
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+
+        #sortDate {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 160px; /* Match button width */
+            height: 45px; /* Match button height */
+            max-width: 100%;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+            background-color: #fff; 
+            text-align: center;
+            box-sizing: border-box; /* Ensure proper padding/spacing */
+        }
+
+        #payment-table {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #payment-table th, #payment-table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-family: Arial, sans-serif;
+        }
+
+        #payment-table th {
+            background-color: #f0f0f0;
+        }
+
+        #payment-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        #clearTableBtn {
+            background-color: #dc3545;
+            color: #fff;
+            margin-left: 5px; /* Add space to the left */
+        }
+
+        /* Responsive Design for Tablets and Small Screens */
+        @media only screen and (max-width: 768px) {
+            .container {
+                margin: 15px auto;
+                max-width: 100%;
+            }
+
+            #payment-table {
+                font-size: 14px;
+            }
+
+            #sortDate {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+
+        /* Responsive Design for Mobile Phones */
+        @media only screen and (max-width: 480px) {
+            .button-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .left-buttons {
+                width: 100%;  /* Full width for better alignment */
+                margin-bottom: 10px;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+            }
+
+            button {
+                width: 100%;  /* Full width for buttons */
+                margin-top: 10px;
+                height: 45px;  /* Common height */
+            }
+
+            #sortDate {
+                width: 100%;  /* Full width for the date input */
+                margin-top: 10px;
+                height: 45px;  /* Common height */
+                font-family: Arial, sans-serif;
+            }
+
+            #payment-table {
+                font-size: 12px;
+            }
+
+            #clearTableBtn {
+                width: 100%;  /* Full width for the Clear button */
+                margin-top: 10px;
+                height: 45px;  /* Common height */
+            }
+            }
+
+            .name {
+                font-family: Arial, sans-serif;
+                font-size: 35px;
+                text-align: center;  /* Horizontally center the text */
+                margin-bottom: 10px; /* Add space below the header */
+                margin-top: 12px;
+
+            }
+
+
+    </style>
 
 </head>
 <body>
 
-<nav class="navbar navbar-dark bg-dark fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">UH ADMIN</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">MENU</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li class="nav-item">
-            <a class="nav-link" href="admin-dashboard.php">Dashboard</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="admin-product.php">Products</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="admin-billiard.php">Billiads</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="admin-song.php">Song</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-order.php">Orders</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-bill.php">Bills</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link active"  aria-current="page"  href="admin-history.php">History</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-sales.php">Sales</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-staff.php">Staff</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-comment.php">Comment</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-signup.php">Create Account</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link " href="admin-concern.php">Customer's Concerns</a>
-            </li>
-
-
-            <style>
-                .navlogout{
-                    
-                    width:20%;
-                    background-color: white;
-                    color: black;
-                    border-radius: 10px;
-                }
-            </style>
-
-            <div class="lii">
-                <form action="" method="post" onsubmit="return confirmLogout()">
-                    <button type="submit" name="logout" class="logout-button navlogout">
-                        <i class='bx bx-log-out'></i>
-                    </button>
-                </form>
-            </div>
-
-
-      </div>
-    </div>
-  </div>
-</nav>
-
-    <div class="sidebar">
-        <div class="top">
-            <i class="bx bx-menu" id="btn"></i>
-            
-           
-            
-        </div>
-        <div class="user">
-            <img src="Pic/logo.png" alt="me" class="user-img">
-            <div class="logo">
-                <span>University Hills</span>
-            </div>
-            <div>
-                <p class="bold">Welcome, Admin!</p>
-            </div>
-        </div>
-            <div class="lii">
-                <a href="admin-dashboard.php">
-                    <i class="bx bxs-grid-alt"></i>
-                    <span class="nav-item">Dashboard</span>
-                </a>
-                <span class="tooltip">Dashboard</span>
-            </div>
-                
-            <div class="lii">
-                <a href="admin-product.php">
-                        <i class="bx bxs-shopping-bag"></i>
-                        <span class="nav-item">Products</span>
-                </a>
-                <span class="tooltip">Products</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-billiard.php">
-                <i class="fa-solid fa-bowling-ball"></i>
-                    <span class="nav-item">Billiard</span>
-                </a>
-                <span class="tooltip">Billiard</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-song.php">
-                <i class="fa-solid fa-music"></i>
-                    <span class="nav-item">Song</span>
-                </a>
-                <span class="tooltip">Song Request</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-order.php">
-                <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="nav-item">Order</span>
-                </a>
-                <span class="tooltip">Order</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-bill.php">
-                <i class="fa-solid fa-money-check-dollar"></i>
-                    <span class="nav-item">Bills</span>
-                </a>
-                <span class="tooltip">Bills</span>
-            </div>
-
-
-            <div class="lii">
-                <a href="admin-history.php">
-                    <i class='bx bx-history'></i>
-                    <span class="nav-item">History</span>
-                </a>
-                <span class="tooltip">History</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-sales.php">
-                    <i class="fa-solid fa-coins"></i>
-                    <span class="nav-item">Sales</span>
-                </a>
-                <span class="tooltip">Sales</span>
-            </div>
-            
-            <div class="lii">
-                <a href="admin-staff.php">
-                    <i class="fa-solid fa-user"></i>
-                    <span class="nav-item">Staff</span>
-                </a>
-                <span class="tooltip">Staff</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-comment.php">
-                    <i class="fa-solid fa-comments"></i>
-                    <span class="nav-item">Comment</span>
-                </a>
-                <span class="tooltip">Comment</span>
-            </div>
-            
-            <div class="lii">
-                <a href="admin-signup.php">
-                    <i class="fa-solid fa-user-plus"></i>
-                    <span class="nav-item">Account</span>
-                </a>
-                <span class="tooltip">Create Account</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-concern.php">
-                <i class="fa-solid fa-exclamation-triangle"></i>
-                    <span class="nav-item">Concerns</span>
-                </a>
-                <span class="tooltip">Customer's Concerns</span>
-            </div>
-
-            <div class="lii">
-                <form action="" method="post" onsubmit="return confirmLogout()">
-                    <button type="submit" name="logout" class="logout-button">
-                    <i class='bx bx-log-out'></i>
-                    </button>
-                </form>
-                <span class="tooltip">Logout</span>
-            </div>
-
-    </div>
-  
-    <script>
-        function confirmLogout() {
-        return confirm("Are you sure you want to log out?");
-        }
-</script>
+    <?php   
+        require 'admin-sidebar.php';
+    ?>
 
 <div class="main-content">
-<div class="container mt-5">
-    <h2>Admin History</h2>
-    <div class="mb-3">
-        <!-- Add a select field for sorting by date -->
-        <label for="sortDate">Sort by Date:</label>
-        <input type="date" id="sortDate" name="sortDate">
-        <button class="btn btn-primary" id="sortBtn">Sort</button>
-        <button class="btn btn-success" id="showAllBtn">Show All</button>
-        
-    </div>
-    <div class="table-responsive">
-        <table class="table table-striped">
+    <h1 class="name">Admin History</h1>
+    <div class="container mt-4">
+        <div class="button-container">
+            <div class="left-buttons">
+                <label for="sortDate">Sort by Date:</label>
+                <input type="date" id="sortDate" name="sortDate">
+                <button class="btn btn-primary" id="sortBtn">Sort</button>
+                <button class="btn btn-success" id="showAllBtn">Show All</button>
+            </div>
+            <button class="btn btn-danger" id="clearTableBtn">Clear All</button>
+        </div>
+        <table id="payment-table">
             <thead>
-            <tr>
-                <th>Payment Tracking No</th>
-                <th>Product ID</th>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Date</th>
-            </tr>
+                <tr>
+                    <th>Payment Tracking No</th>
+                    <th>Product ID</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                </tr>
             </thead>
             <tbody id="tableBody">
             <!-- Records will be displayed here -->
             </tbody>
         </table>
     </div>
-    <button class="btn btn-danger" id="clearTableBtn">Clear All</button>
-</div>
 </div>
 
 <!-- Bootstrap JS and jQuery -->
@@ -412,68 +330,69 @@ if (isset($_POST['logout'])) {
                                 '<td>' + record.product_name + '</td>' +
                                 '<td>' + record.quantity + '</td>' +
                                 '<td>' + record.date + '</td>' +
+                                '<td>' + record.time + '</td>' +
                                 '</tr>'
                             );
                         });
                     } else {
-                        $('#tableBody').html('<tr><td colspan="5">No records found</td></tr>');
+                        $('#tableBody').html('<tr><td colspan="6">No records found</td></tr>');
                     }
                 },
                 error: function(xhr, status, error){
                     console.error(xhr.responseText);
-                    $('#tableBody').html('<tr><td colspan="5">Error fetching records</td></tr>');
+                    $('#tableBody').html('<tr><td colspan="6">Error fetching records</td></tr>');
                 }
             });
         }
-    });
-</script>
 
-<script>
-    // Add event listener to the sort button
-$('#sortBtn').click(function(){
-    // Retrieve the selected date
-    var sortDate = $('#sortDate').val();
+        // Add event listener to the sort button
+        $('#sortBtn').click(function(){
+            // Retrieve the selected date
+            var sortDate = $('#sortDate').val();
 
-    // Send AJAX request to fetch sorted records
-    $.ajax({
-        url: 'fetch_records.php', // Modify URL as needed
-        type: 'GET',
-        data: { sortDate: sortDate }, // Pass selected date as parameter
-        dataType: 'json',
-        success: function(response){
-            // Clear existing table rows
-            $('#tableBody').empty();
+            // Check if a date is selected
+            if (!sortDate) {
+                alert("Please select a date to sort.");
+                return; // Exit the function if no date is selected
+            }
 
-            // Populate table with sorted records
-            $.each(response, function(index, record) {
-                $('#tableBody').append(
-                    '<tr>' +
-                    '<td>' + record.payment_trackingno + '</td>' +
-                    '<td>' + record.pid + '</td>' +
-                    '<td>' + record.product_name + '</td>' +
-                    '<td>' + record.quantity + '</td>' +
-                    '<td>' + record.date + '</td>' +
-                    '</tr>'
-                );
+            // Send AJAX request to fetch sorted records
+            $.ajax({
+                url: 'fetch_records.php', // Modify URL as needed
+                type: 'GET',
+                data: { sortDate: sortDate }, // Pass selected date as parameter
+                dataType: 'json',
+                success: function(response){
+                    // Clear existing table rows
+                    $('#tableBody').empty();
+
+                    // Populate table with sorted records
+                    if (response && response.length > 0) {
+                        $.each(response, function(index, record) {
+                            $('#tableBody').append(
+                                '<tr>' +
+                                '<td>' + record.payment_trackingno + '</td>' +
+                                '<td>' + record.pid + '</td>' +
+                                '<td>' + record.product_name + '</td>' +
+                                '<td>' + record.quantity + '</td>' +
+                                '<td>' + record.date + '</td>' +
+                                '<td>' + record.time + '</td>' +
+                                '</tr>'
+                            );
+                        });
+                    } else {
+                        $('#tableBody').html('<tr><td colspan="6">No records found for the selected date.</td></tr>');
+                    }
+                },
+                error: function(xhr, status, error){
+                    console.error(xhr.responseText);
+                    $('#tableBody').html('<tr><td colspan="6">Error fetching sorted records</td></tr>');
+                }
             });
-        },
-        error: function(xhr, status, error){
-            console.error(xhr.responseText);
-            $('#tableBody').html('<tr><td colspan="5">Error fetching sorted records</td></tr>');
-        }
+        });
     });
-});
-
 </script>
 
-<script>
-    let btn = document.querySelector('#btn');
-    let sidebar = document.querySelector('.sidebar');
-
-    btn.onclick = function () {
-        sidebar.classList.toggle('active');
-    };
-</script>
 
 <script>
     let btn = document.querySelector('#btn');
@@ -505,6 +424,7 @@ $('#showAllBtn').click(function(){
                     '<td>' + record.product_name + '</td>' +
                     '<td>' + record.quantity + '</td>' +
                     '<td>' + record.date + '</td>' +
+                    '<td>' + record.time + '</td>' +
                     '</tr>'
                 );
             });

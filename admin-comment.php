@@ -61,130 +61,75 @@ $result = mysqli_query($connection, $query);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-straight/css/uicons-bold-straight.css'>
 
-
+    <link rel="icon" href="Pic/logo.svg" type="image/x-icon">
     <link rel="stylesheet" href="css/sidebar.css">
 
 
-        <style>
+    <style>
+        .main-content{
+            height: 100vh;
+            overflow-x: hidden;
+            padding-left: 5%;
+        }
 
-.custom-table {
-    width: 100%;
-    border-collapse: collapse; /* Collapse borders to remove space between cells */
-    font-family: Arial, sans-serif;
-    margin-top: 20px;
-}
+        .mesa{
+        
+        width: 100%;
+        margin-bottom: 1rem;
+        background-color: white;
+        border-collapse: collapse;
+        }
 
-/* Header Styling */
+                /* For table-bordered */
+    .table-bordered {
+        border-radius: 5px; /* Rounded corners */
+    }
 
+    .table-bordered th,
+    .table-bordered td {
+        border: 1px solid #dee2e6; /* Standard border between cells */
+        padding: 12px; /* More padding for better readability */
+    }
 
-/* Table Header Cells */
-.custom-table th {
-    padding: 12px; /* Padding inside header cells */
-    border: 1px solid #ddd; /* Border for header cells */
-    text-align: center; /* Center-align text in header */
-    font-weight: bold;
-}
+    /* For table-striped */
+    .table-wipe tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2; /* Light gray background for odd rows */
+    }
 
-/* Table Data Cells */
-.custom-table td {
-    padding: 12px; /* Padding inside table cells */
-    border: 1px solid #ddd; /* Border for table cells */
-    text-align: center; /* Center-align text */
-}
+    /* Custom hover effect for table rows */
+    .table-wipe tbody tr:hover {
+        background-color: #e9ecef; /* Light gray hover effect */
+        cursor: pointer;
+    }
 
-/* Row striping */
-.custom-table tr:nth-child(odd) {
-    background-color: #e6e6e6; /* Light gray background for even rows */
-}
+    /* Header styling */
+    .table-bordered thead th {
+        /* Dark background for headers */
+        /* White text in headers */
+        text-align: center; /* Centered header text */
+        font-weight: bold;
+    }
 
-/* Hover effect on rows */
+    /* Optional: Change the font style */
+    .table-bordered {
+        font-size: 14px; /* Font size */
+    }
 
-
-/* Specific style for "No feedback found" message */
-.custom-table .no-feedback {
-    text-align: center;
-    font-weight: bold;
-    color: #ff0000; /* Red color for no feedback message */
-}
-
-/* Optional: Table Borders */
-.custom-table {
-    border: 1px solid #ddd; /* Border around the entire table */
-}
-
+            .main-content{
+                position: relative;
+                background-color: #eee;
             
-            .payment-table {
-            table-layout: fixed;
-            width: 100%;
-            border-collapse: collapse;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            }
-
-            .payment-table th, #payment-table td {
-            padding: 15px;
-            text-align: center;
-            border: 1px solid #ddd;
-            font-family: Arial, sans-serif;
-            }
-
-            .payment-table th {
-            font-weight: bold;
-            }
-
-            .payment-table tr:nth-child(even) {
-            background-color: #f9f9f9;
+                top:0;
+                left:80px;
+                transition: all 0.5s ease;
+                width: calc(100% - 80px);
+                padding: 1rem;
             }
            
-            .main-content{
-                height: 100vh;
-                overflow-x: hidden;
-                padding-left: 5%;
-            }
-
-            #bold-text{
-                font-weight: bold;
-            }
-
-
-
-            .navbar{
-                display:none
-            }
-
-
-            @media only screen and (max-width: 992px) {
-                .sidebar{
-                    display: none;
-                }
-
-                .main-content{
-                top:50px;
-                left:0px;
-                width: 100%;
-                }
-
-                .navbar{
-                    display: block;
-                    background-color: #12171e;
-                }
-
-                .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-            .navbar-toggler{
-                height: 30px;
-                padding-top: 0px;
-            }
-            .navbar-toggler-icon{
-                font-size: 8pt;
-                margin-top: 0px;
-            }
-
-
-
-            }
+           
 
                 .main-content{
                     position: relative;
@@ -202,343 +147,342 @@ $result = mysqli_query($connection, $query);
 
 
                 @media only screen and (max-width: 992px) {
-                    .sidebar{
-                        display: none;
-                    }
-
                     .main-content{
                     top:50px;
                     left:0px;
                     width: 100%;
                     }
 
-                    .navbar{
-                        display: block;
-                        background-color: #12171e;
                     }
 
+                        .table thead th,
+                        .table tbody td {
+                    background-color: beige;
                     }
-
-                       
                     
             </style>
 
 </head>
 <body>
 
-<nav class="navbar navbar-dark bg-dark fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">UH ADMIN</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">MENU</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li class="nav-item">
-            <a class="nav-link "  href="admin-dashboard.php">Dashboard</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="admin-product.php">Products</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="admin-billiard.php">Billiads</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="admin-song.php">Song</a>
-            </li>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+    }
 
-            <li class="nav-item">
-            <a class="nav-link" href="admin-order.php">Orders</a>
-            </li>
+    .container-fluid {
+        max-width: 1500px;
+        margin: 30px auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
 
-            <li class="nav-item">
-            <a class="nav-link" href="admin-bill.php">Bills</a>
-            </li>
+    h1 {
+        font-family: Arial, sans-serif;
+        font-size: 35px;
+        text-align: center;  
+        margin-bottom: 20px;
+        margin-top: 10px;
+    }
 
-            <li class="nav-item">
-            <a class="nav-link" href="admin-history.php">History</a>
-            </li>
+    .row.mb-3 {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
 
-            <li class="nav-item">
-            <a class="nav-link" href="admin-sales.php">Sales</a>
-            </li>
+    .input-group {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+    }
 
-            <li class="nav-item">
-            <a class="nav-link "  href="admin-staff.php">Staff</a>
-            </li>
+    .input-group input {
+        padding: 10px;
+        width: calc(100% - 150px); /* Adjust width to leave room for button */
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-right: 10px;
+        font-family: Arial, sans-serif;
+    }
 
-            <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="admin-comment.php">Comment</a>
-            </li>
+    .input-group button {
+        width: 140px;
+        height: 45px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
 
-            <li class="nav-item">
-            <a class="nav-link" href="admin-signup.php">Create Account</a>
-            </li>
+    .input-group button:hover {
+        background-color: #3e8e41;
+    }
 
-            <li class="nav-item">
-                <a class="nav-link" href="admin-concern.php">Customer's Concerns</a>
-                </li>
+    .text-end {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        justify-content: flex-end; /* Align buttons to the right */
+    }
 
-            <style>
-                .navlogout{
-                    
-                    width:20%;
-                    background-color: white;
-                    color: black;
-                    border-radius: 10px;
-                }
-            </style>
+    .text-end button {
+        background-color: black; /* Set the refresh button color to black */
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
 
-            <div class="lii">
-                <form action="" method="post" onsubmit="return confirmLogout()">
-                    <button type="submit" name="logout" class="logout-button navlogout">
-                        <i class='bx bx-log-out'></i>
-                    </button>
-                </form>
-            </div>
+    .text-end button:hover {
+        background-color: #333; /* Darker shade for hover effect */
+    }
 
-      </div>
-    </div>
-  </div>
-</nav>
+    .dropdown-menu {
+        padding: 10px;
+        font-family: Arial, sans-serif;
+    }
 
+    table.mesa {
+        width: 100%;
+        table-layout: fixed; /* Ensures fixed column widths */
+        border-collapse: collapse;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
 
-    <div class="sidebar">
-        <div class="top">
-            <i class="bx bx-menu" id="btn"></i>
+    table.mesa th, table.mesa td {
+        padding: 15px;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    table.mesa th {
+        background-color: #f0f0f0;
+    }
+
+    table.mesa tr:nth-child(even) {
+        background-color: #f9f9f9;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Adjust column widths here */
+    table.mesa th:nth-child(1),
+    table.mesa td:nth-child(1) {
+        width: 10%; /* Adjust column width for Customer Name */
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+    table.mesa th:nth-child(2),
+    table.mesa td:nth-child(2) {
+        width: 10%; /* Adjust column width for Rate */
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+    table.mesa th:nth-child(3),
+    table.mesa td:nth-child(3) {
+        width: 35%; /* Adjust column width for Comment */
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+        
+    }
+
+    table.mesa th:nth-child(4),
+    table.mesa td:nth-child(4) {
+        width: 10%; /* Adjust column width for Date */
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+    table.mesa th:nth-child(5),
+    table.mesa td:nth-child(5) {
+        width: 10%; /* Adjust column width for Time */
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+    #noResults {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+    #noResults img {
+        max-width: 200px;
+        margin-bottom: 20px;
+    }
+
+    #noResults p {
+        font-size: 18px;
+        color: #555;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Responsive Design for Tablets and Small Screens */
+    @media only screen and (max-width: 768px) {
+        .container-fluid {
+            margin: 15px auto;
+            max-width: 100%;
+        }
+
+        table.mesa {
+            font-size: 14px;
+        }
+
+        .input-group {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .input-group input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .input-group button, .text-end button {
+            width: 100%;
+            margin-top: 10px;
             
-           
-            
-        </div>
-        <div class="user">
-            <img src="Pic/logo.png" alt="me" class="user-img">
-            <div class="logo">
-                <span>University Hills</span>
-            </div>
-            <div>
-                <p class="bold">Welcome, Admin!</p>
-            </div>
-        </div>
-            <div class="lii">
-                <a href="admin-dashboard.php">
-                    <i class="bx bxs-grid-alt"></i>
-                    <span class="nav-item">Dashboard</span>
-                </a>
-                <span class="tooltip">Dashboard</span>
-            </div>
-                
-            <div class="lii">
-                <a href="admin-product.php">
-                        <i class="bx bxs-shopping-bag"></i>
-                        <span class="nav-item">Products</span>
-                </a>
-                <span class="tooltip">Products</span>
-            </div>
+        }
+    }
 
-            <div class="lii">
-                <a href="admin-billiard.php">
-                <i class="fa-solid fa-bowling-ball"></i>
-                    <span class="nav-item">Billiard</span>
-                </a>
-                <span class="tooltip">Billiard</span>
-            </div>
+    /* Responsive Design for Mobile Phones */
+    @media only screen and (max-width: 480px) {
+        .row.mb-3 {
+            flex-direction: column;
+            align-items: flex-start;
+        }
 
-            <div class="lii">
-                <a href="admin-song.php">
-                <i class="fa-solid fa-music"></i>
-                    <span class="nav-item">Song</span>
-                </a>
-                <span class="tooltip">Song Request</span>
-            </div>
+        .input-group input, .input-group button {
+            width: 100%;
+            margin-top: 10px;
+        }
 
-            <div class="lii">
-                <a href="admin-order.php">
-                <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="nav-item">Order</span>
-                </a>
-                <span class="tooltip">Order</span>
-            </div>
+        .text-end {
+            flex-direction: column;
+            width: 100%;
+            margin-top: 10px;
+        }
 
-            <div class="lii">
-                <a href="admin-bill.php">
-                <i class="fa-solid fa-money-check-dollar"></i>
-                    <span class="nav-item">Bills</span>
-                </a>
-                <span class="tooltip">Bills</span>
+        .text-end button {
+            width: 100%;
+        }
+
+        table.mesa {
+            font-size: 12px;
+        }
+    }
+
+    .name {
+    font-family: Arial, sans-serif;
+    font-size: 35px;
+    text-align: center;  /* Horizontally center the text */
+    margin-bottom: 10px; /* Add space below the header */
+    margin-top: 10px;
+
+}
+</style>
+    <?php   
+        require 'admin-sidebar.php';
+    ?>
+
+<div class="main-content">
+        <h1 class="name">Customer Feedbacks</h1>
+        <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" id="searchInput" class="form-control dark" placeholder="Search..." onkeypress="handleKeyPress(event)">
+                    <button type="button" onclick="searchFeedback()"><i class="fas fa-search"></i> Search</button>
+                </div>
             </div>
 
-            <div class="lii">
-                <a href="admin-history.php">
-                    <i class='bx bx-history'></i>
-                    <span class="nav-item">History</span>
-                </a>
-                <span class="tooltip">History</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-sales.php">
-                    <i class="fa-solid fa-coins"></i>
-                    <span class="nav-item">Sales</span>
-                </a>
-                <span class="tooltip">Sales</span>
-            </div>
-            
-            <div class="lii">
-                <a href="admin-staff.php">
-                    <i class="fa-solid fa-user"></i>
-                    <span class="nav-item">Staff</span>
-                </a>
-                <span class="tooltip">Staff</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-comment.php">
-                    <i class="fa-solid fa-comments"></i>
-                    <span class="nav-item">Comment</span>
-                </a>
-                <span class="tooltip">Comment</span>
-            </div>
-
-            
-            <div class="lii">
-                <a href="admin-signup.php">
-                    <i class="fa-solid fa-user-plus"></i>
-                    <span class="nav-item">Account</span>
-                </a>
-                <span class="tooltip">Create Account</span>
-            </div>
-
-            
-            <div class="lii">
-                <a href="admin-concern.php">
-                <i class="fa-solid fa-exclamation-triangle"></i>
-                    <span class="nav-item">Concerns</span>
-                </a>
-                <span class="tooltip">Customer's Concerns</span>
-            </div>
-
-            
-
-            <div class="lii">
-            <form action="" method="post" onsubmit="return confirmLogout()">
-                <button type="submit" name="logout" class="logout-button">
-                <i class='bx bx-log-out'></i>
-                </button>
-            </form>
-            <span class="tooltip">Logout</span>
-            </div>
-
-            <script>
-                function confirmLogout() {
-                return confirm("Are you sure you want to log out?");
-                }
-            </script>
-
-    </div>
-
- 
-            <div class="main-content">
-            <div class="container-fluid">
-                <h1>Feedbacks</h1>
-
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="input-group">
-                        <input type="text" id="searchInput" class="form-control dark" placeholder="Search..." onkeypress="handleKeyPress(event)">
-                            <button class="btn btn-primary" type="button" onclick="searchFeedback()"><i class="fas fa-search"></i> Search</button>
-                            
-                        </div>
-                    </div>
-
-                <div class="col-md-6 text-end">
-                <button class="btn btn-success" type="button" onclick="refreshList()"><i class="fas fa-sync-alt"></i> </button>
-                <button class="btn btn-primary dropdown-toggle"  type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter Feedback</button>
+            <div class="col-md-6 text-end">
+                <button type="button" onclick="showAll()"><i class="fas fa-sync-alt"></i> </button>
+                <button class="dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">Filter Feedback</button>
                 <ul class="dropdown-menu" aria-labelledby="filterDropdown">
-        <li><a class="dropdown-item" href="#" onclick="showAll()">Show All</a></li>
-        <li><a class="dropdown-item" href="#" onclick="filterFeedback(5)">⭐⭐⭐⭐⭐</a></li>
-        <li><a class="dropdown-item" href="#" onclick="filterFeedback(4)">⭐⭐⭐⭐</a></li>
-        <li><a class="dropdown-item" href="#" onclick="filterFeedback(3)">⭐⭐⭐</a></li>
-        <li><a class="dropdown-item" href="#" onclick="filterFeedback(2)">⭐⭐</a></li>
-        <li><a class="dropdown-item" href="#" onclick="filterFeedback(1)">⭐</a></li>
-    </ul>   
-            </div>
-                </div>
-
-                <table id="feedbackTable" class="custom-table">
-                   
-                       
-           
-                    <tbody>
-                    <tr>
-                        <td id="bold-text" scope="col">Customer Name</td>
-                            <td id="bold-text" scope="col">Rate</td>
-                            <td id="bold-text" scope="col">Comment</td>
-                            <td id="bold-text" scope="col">Date</td>
-                            <td id="bold-text" scope="col">Time</td>
-                            
-                        </tr>
-                            <?php
-                            $sql = "SELECT * FROM feedback";
-                            $result = mysqli_query($connection, $sql);
-
-                            if (mysqli_num_rows($result) > 0) {
-                                while ($row = mysqli_fetch_assoc($result)) {
-                                    echo "<tr>";
-                                    echo "<td>{$row['name']}</td>";
-                                    $rate = $row['rate'];
-                                    $ratingRange = '';
-                                    if ($rate >= 0.1 && $rate <= 1.4) {
-                                        $ratingRange = 'Poor';
-                                    } else if ($rate >= 1.5 && $rate <= 2.4) {
-                                        $ratingRange = 'Unsatisfactory';
-                                    } else if ($rate >= 2.5 && $rate <= 3.4) {
-                                        $ratingRange = 'Satisfactory';
-                                    } else if ($rate >= 3.5 && $rate <= 4.4) {
-                                        $ratingRange = 'Very Satisfactory';
-                                    } else if ($rate >= 4.5 && $rate <= 5.0) {
-                                        $ratingRange = 'Outstanding';
-                                    }
-                                    echo "<td>{$ratingRange}</td>"; // Display the rating range instead of the raw rating value
-                                    echo "<td>{$row['comment']}</td>";
-                                    echo "<td>{$row['date']}</td>";
-                                    echo "<td>{$row['time']}</td>";
-                                    echo "</tr>";
-
-                                }
-                            } else {
-                                echo "<tr><td colspan='5'>No feedback found</td></tr>";
-                            }
-                            ?>
-                    </tbody>
-                </table>
-
-                <div id="noResults" style="display: none; text-align: center;">
-                    <img src="Pic/empty.svg" alt="Not Found" style="max-width: 100%;">
-                    <p>No results found</p>
-                </div>
+                    <li><a class="dropdown-item" href="#" onclick="showAll()">Show All</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="filterFeedback(5)">⭐⭐⭐⭐⭐</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="filterFeedback(4)">⭐⭐⭐⭐</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="filterFeedback(3)">⭐⭐⭐</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="filterFeedback(2)">⭐⭐</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="filterFeedback(1)">⭐</a></li>
+                </ul>
             </div>
         </div>
 
-                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                    <tr>
-                        <td><?php echo $row['name']; ?></td>
-                        <td><?php echo $row['rate']; ?></td>
-                        <td><?php echo $row['comment']; ?></td>
-                        <td><?php echo $row['date']; ?></td>
-                        <td><?php echo $row['time']; ?></td>
-                    </tr>
-                <?php endwhile; ?>
+        <table id="feedbackTable" class="mesa table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Rate</th>
+                    <th scope="col">Comment</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $sql = "SELECT * FROM feedback";
+                $result = mysqli_query($connection, $sql);
+
+                if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<tr>";
+                        echo "<td>{$row['name']}</td>";
+                        $rate = $row['rate'];
+                        $ratingRange = '';
+                        if ($rate >= 0.1 && $rate <= 1.4) {
+                            $ratingRange = 'Poor';
+                        } else if ($rate >= 1.5 && $rate <= 2.4) {
+                            $ratingRange = 'Unsatisfactory';
+                        } else if ($rate >= 2.5 && $rate <= 3.4) {
+                            $ratingRange = 'Satisfactory';
+                        } else if ($rate >= 3.5 && $rate <= 4.4) {
+                            $ratingRange = 'Very Satisfactory';
+                        } else if ($rate >= 4.5 && $rate <= 5.0) {
+                            $ratingRange = 'Outstanding';
+                        }
+                        echo "<td>{$ratingRange}</td>";
+                        echo "<td>{$row['comment']}</td>";
+                        echo "<td>{$row['date']}</td>";
+                        echo "<td>{$row['time']}</td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='5'>No feedback found</td></tr>";
+                }
+                ?>
             </tbody>
         </table>
+
+        <div id="noResults" style="display: none; text-align: center;">
+            <img src="Pic/empty.svg" alt="Not Found" style="max-width: 100%;">
+            <p>No results found</p>
+        </div>
     </div>
 </div>
 
-</body>
 <script>
     let btn = document.querySelector('#btn');
     let sidebar = document.querySelector('.sidebar');

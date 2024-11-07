@@ -9,6 +9,8 @@ $database = "university_hills";
 // Create Connection
 $connection = mysqli_connect($servername, $username, $password, $database);
 
+
+
 // Get the table_number and cid from the AJAX request
 $table_number = $_SESSION['table_number'];
 $table_name = $_SESSION['table_name'];
@@ -45,6 +47,16 @@ if ($connection->query($sql) === TRUE) {
     echo "Error updating status: " . $connection->error;
 }
 
+
+
+// Update the active field in the customer table to false (0)
+$sql_update_customer = "UPDATE customer SET active = 'falses' WHERE table_number = $table_number ";
+
+if ($connection->query($sql_update_customer) === TRUE) {
+    echo "Customer status updated to inactive successfully";
+} else {
+    echo "Error updating customer status: " . $connection->error;
+}
 
 
 

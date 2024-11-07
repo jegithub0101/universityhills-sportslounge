@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 $servername = "localhost";
@@ -7,9 +6,13 @@ $username = "root";
 $password = "";
 $database = "university_hills";
 
-//Create Connection
+// Create Connection
 $connection = mysqli_connect($servername, $username, $password, $database);
 
+// Check connection
+if($connection->connect_error){
+    die("Connection failed: " . $connection->connect_error);
+}
 
 // Function to check if a user is logged in
 function isLoggedIn()
@@ -41,14 +44,15 @@ if (isset($_POST['logout'])) {
 
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Song Request | University Hills</title>
+    <title>Song Requests | University Hills</title>
     <link rel="icon" href="Pic/uhicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
     <link rel="stylesheet" href="bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css">
     <script src="bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js"></script>
 
@@ -59,17 +63,15 @@ if (isset($_POST['logout'])) {
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
+    <link rel="icon" href="Pic/logo.svg" type="image/x-icon">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-straight/css/uicons-bold-straight.css'>
     <link rel="stylesheet" href="css/sidebar.css">
 
     <style>
         .main-content{
             height: 100vh;
             overflow-x: hidden;
-            padding-left: 5%;
         }
         .x{
             padding-top: 0;
@@ -77,279 +79,40 @@ if (isset($_POST['logout'])) {
         h1{
             padding-top: 10px;
         }
-        .song_container{
-            height: 700px;
-            background-color: white;
-            overflow: auto;
+        
+        .container {
+            font-family: Arial, sans-serif;
+            max-width: 1500px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
     </style>
 
-<style>
-
-        .navbar{
-            display:none
-        }
-
-
-        @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-            .navbar-toggler{
-                height: 30px;
-                padding-top: 0px;
-            }
-            .navbar-toggler-icon{
-                font-size: 8pt;
-                margin-top: 0px;
-            }
-
-
-        }
+    <style>
 
         .card-header {
             background-color: #343a40; /* Dark color */
             color: #fff; /* Text color */
         }
 
-</style>
-
-</head>
+    </style>
+    
 <body>
 
-<nav class="navbar navbar-dark bg-dark fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">UH ADMIN</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">MENU</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li class="nav-item">
-            <a class="nav-link" href="admin-dashboard.php">Dashboard</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="admin-product.php">Products</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="admin-billiard.php">Billiads</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="admin-song.php">Song</a>
-            </li>
+    <?php
+        require 'admin-sidebar.php';
+    ?>
 
-            <li class="nav-item">
-            <a class="nav-link" href="admin-order.php">Orders</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-bill.php">Bills</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-history.php">History</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-sales.php">Sales</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-staff.php">Staff</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-comment.php">Comment</a>
-            </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="admin-signup.php">Create Account</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="admin-concern.php">Customer's Concerns</a>
-                </li>
-
-
-            <style>
-                .navlogout{
-                    
-                    width:20%;
-                    background-color: white;
-                    color: black;
-                    border-radius: 10px;
-                }
-            </style>
-
-            <div class="lii">
-                <form action="" method="post" onsubmit="return confirmLogout()">
-                    <button type="submit" name="logout" class="logout-button navlogout">
-                        <i class='bx bx-log-out'></i>
-                    </button>
-                </form>
-            </div>
-
-      </div>
-    </div>
-  </div>
-</nav>
-
-
-    <div class="sidebar">
-        <div class="top">
-            <i class="bx bx-menu" id="btn"></i>
-        </div>
-        <div class="user">
-            <img src="Pic/logo.png" alt="me" class="user-img">
-            <div class="logo">
-                <span>University Hills</span>
-            </div>
-            <div>
-                <p class="bold">Welcome, Admin!</p>
-            </div>
-        </div>
-            <div class="lii">
-                <a href="admin-dashboard.php">
-                    <i class="bx bxs-grid-alt"></i>
-                    <span class="nav-item">Dashboard</span>
-                </a>
-                <span class="tooltip">Dashboard</span>
-            </div>
-                
-            <div class="lii">
-                <a href="admin-product.php">
-                        <i class="bx bxs-shopping-bag"></i>
-                        <span class="nav-item">Products</span>
-                </a>
-                <span class="tooltip">Products</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-billiard.php">
-                <i class="fa-solid fa-bowling-ball"></i>
-                    <span class="nav-item">Billiard</span>
-                </a>
-                <span class="tooltip">Billiard</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-song.php">
-                <i class="fa-solid fa-music"></i>
-                    <span class="nav-item">Song</span>
-                </a>
-                <span class="tooltip">Song Request</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-order.php">
-                <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="nav-item">Order</span>
-                </a>
-                <span class="tooltip">Order</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-bill.php">
-                <i class="fa-solid fa-money-check-dollar"></i>
-                    <span class="nav-item">Bills</span>
-                </a>
-                <span class="tooltip">Bills</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-history.php">
-                    <i class='bx bx-history'></i>
-                    <span class="nav-item">History</span>
-                </a>
-                <span class="tooltip">History</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-sales.php">
-                    <i class="fa-solid fa-coins"></i>
-                    <span class="nav-item">Sales</span>
-                </a>
-                <span class="tooltip">Sales</span>
-            </div>
-            
-            <div class="lii">
-                <a href="admin-staff.php">
-                    <i class="fa-solid fa-user"></i>
-                    <span class="nav-item">Staff</span>
-                </a>
-                <span class="tooltip">Staff</span>
-            </div>
-
-            <div class="lii">
-                <a href="admin-comment.php">
-                    <i class="fa-solid fa-comments"></i>
-                    <span class="nav-item">Comment</span>
-                </a>
-                <span class="tooltip">Comment</span>
-            </div>
-
-            
-            <div class="lii">
-                <a href="admin-signup.php">
-                    <i class="fa-solid fa-user-plus"></i>
-                    <span class="nav-item">Account</span>
-                </a>
-                <span class="tooltip">Create Account</span>
-            </div>
-
-            
-            <div class="lii">
-                <a href="admin-concern.php">
-                <i class="fa-solid fa-exclamation-triangle"></i>
-                    <span class="nav-item">Concerns</span>
-                </a>
-                <span class="tooltip">Customer's Concerns</span>
-            </div>
-
-            
-            <div class="lii">
-            <form action="" method="post" onsubmit="return confirmLogout()">
-                <button type="submit" name="logout" class="logout-button">
-                <i class='bx bx-log-out'></i>
-                </button>
-            </form>
-            <span class="tooltip">Logout</span>
-            </div>  
-
-    </div>
-
-    <script>
-        function confirmLogout() {
-        return confirm("Are you sure you want to log out?");
-        }
-    </script>
   
     <div class="main-content">
         <div class="container-fluid">
-            <h1>University Hills Sport Louge</h1>
-            <h2 class="text-center">Song Requests</h2>
-            <div class="container">
+            <!-- <h1>University Hills Sport Louge</h1> -->
+            <h1 class="text-center">Song Requests</h1>
+            <div class="container mt4">
                 <div id="link_wrapper" class="song_container">
 
 

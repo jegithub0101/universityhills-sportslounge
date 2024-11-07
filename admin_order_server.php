@@ -1,223 +1,379 @@
 <?php
-
 session_start();
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "university_hills";
+// Database configuration
+$config = [
+    'host' => 'localhost',
+    'username' => 'root',
+    'password' => '',
+    'database' => 'university_hills'
+];
 
-//Create Connection
-$connection = mysqli_connect($servername, $username, $password, $database);
+// Create connection using try-catch for better error handling
+try {
+    $connection = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
+    if ($connection->connect_error) {
+        throw new Exception("Connection failed: " . $connection->connect_error);
+    }
+} catch (Exception $e) {
+    die("Database connection error: " . $e->getMessage());
+}
 
+// Function to fetch order details
+function getOrderDetails($connection, $cid, $tracking) {
+    $sql = "SELECT * FROM admin_order WHERE cid = ? AND tracking_no = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("is", $cid, $tracking);
+    $stmt->execute();
+    return $stmt->get_result();
+}
 
+// Function to fetch order instructions
+function getOrderInstructions($connection, $tracking) {
+    $sql = "SELECT instruction FROM product_instruction WHERE tracking_no = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("s", $tracking);
+    $stmt->execute();
+    return $stmt->get_result();
+}
 
-
-
+// Function to get order status counts
+function getOrderStatusCounts($connection, $cid, $tracking) {
+    $counts = [];
+    
+    // Get total orders
+    $sql = "SELECT COUNT(*) as count FROM admin_order WHERE cid = ? AND tracking_no = ?";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("is", $cid, $tracking);
+    $stmt->execute();
+    $counts['total'] = $stmt->get_result()->fetch_assoc()['count'];
+    
+    // Get cancelled orders
+    $sql = "SELECT COUNT(*) as count FROM admin_order WHERE cid = ? AND tracking_no = ? AND status = 'Cancelled'";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("is", $cid, $tracking);
+    $stmt->execute();
+    $counts['cancelled'] = $stmt->get_result()->fetch_assoc()['count'];
+    
+    // Get preparing orders
+    $sql = "SELECT COUNT(*) as count FROM admin_order WHERE cid = ? AND tracking_no = ? AND status = 'Preparing'";
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param("is", $cid, $tracking);
+    $stmt->execute();
+    $counts['preparing'] = $stmt->get_result()->fetch_assoc()['count'];
+    
+    return $counts;
+}
 ?>
 
-<style>
-        .cards{
-            max-width:350px;
-            min-width:350px;
-            
-            
-        }
-        @media only screen and (max-width: 992px) {
-        .cards{
-            margin-right:1%
-            margin-left:1%;
-            max-width:300px;
-            min-width:300px;
-        }
-        }
-        @media only screen and (max-width: 771px) {
-        .cards{
-            margin:.5%;
-            max-width:250px;
-            min-width:250px;
-        }
-        }
-        @media only screen and (max-width: 605px) {
-        .cards{
-            
-            max-width:220px;
-            min-width:220px;
-        }
-        .det{
-            font-size:11pt
-        }
-        .ptitle{
-            font-size:11pt;
-        }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #22c55e;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --background-light: #f3f4f6;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
 
-        @media only screen and (max-width: 540px) {
-        .cards{
-            margin:0%;
-            max-width:200px;
-            min-width:200px;
-        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        @media only screen and (max-width: 500px) {
-        .cards{
-            max-width:300px;
-            min-width:300px;
-            margin-left:10%;
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.5;
         }
+
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
         }
-        @media only screen and (max-width: 430px) {
-        .cards{
-           
-            margin-left:3%;
+
+        .order-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
         }
+
+        .order-card:hover {
+            transform: translateY(-2px);
         }
-        @media only screen and (max-width: 400px) {
-        .cards{
-            margin-left:0%;
+
+        .order-header {
+            background-color:#12171e;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+
+        .table-number {
+            font-size: 1.25rem;
+            font-weight: 600;
         }
-        /* @media only screen and (max-width: 605px) {
-        .cards{
-            margin:.5%;
-            max-width:250px;
-            min-width:250px;
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
         }
-        .det{
-            font-size:11pt
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.2s ease;
         }
-        } */
 
-
-        .description{
-            width: 100%;
-            border-top: 1px solid black;
-            margin-top:25px;
-            color:black;
+        .btn:hover {
+            opacity: 0.9;
         }
-                                      
 
-</style>
+        .btn-accept {
+            background: var(--success-color);
+            color: white;
+        }
 
-<div class="">
-                <?php
-                $sql = "SELECT distinct table_number,tracking_no,cid from admin_order where status !='Done' and status !='Request'";
-                $result = $connection->query($sql);
+        .btn-delete {
+            background: var(--danger-color);
+            color: white;
+        }
 
-                if ($result->num_rows > 0) {
-                    // Loop through each customer ID
-                    while ($row = $result->fetch_assoc()) {
-                        $cid = $row["cid"];
-                        $tracking = $row['tracking_no'];
-                        $table_num = $row['table_number'];
+        .order-content {
+            padding: 1rem;
+        }
 
+        .order-items {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
 
-                        //count the called status of that tracking order
-                        $sql_cancelled = "SELECT COUNT(*) AS cancelled_count FROM admin_order WHERE cid=$cid and tracking_no = '$tracking' and status = 'Cancelled'";
-                        $result_cancelled = $connection->query($sql_cancelled);
-                        $row_cancelled = $result_cancelled->fetch_assoc();
-                        
-                        //count of tracking order
-                        $sql_count = "SELECT COUNT(*) AS count_track FROM admin_order WHERE cid=$cid and tracking_no = '$tracking'";
-                        $result_track = $connection->query($sql_count);
-                        $row_track = $result_track->fetch_assoc();
+        .items-header {
+            background: #f8fafc;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+        }
 
+        .item-row {
+            padding: 0.75rem 1rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
 
-                        //count of preparing status
-                        $sql_preparing = "SELECT COUNT(*) AS prepared_count FROM admin_order WHERE cid=$cid and tracking_no = '$tracking' and status = 'Preparing'";
-                        $result_preparing = $connection->query($sql_preparing);
-                        $row_preparing = $result_preparing->fetch_assoc();
-                        
-                        $hide = "";
-                        if($row_preparing['prepared_count'] === $row_track['count_track']){
-                            $hide = "hide";
-                        }
-                        
-                        //---------------------------------------------
-                        // If the count of status cancelled is not equal to tracking order, then print it.
-                    if ($row_track['count_track'] !== $row_cancelled['cancelled_count']) {
-                        ?>
-                        <div class="col-sm-5 col-md-3 col-lg-3 col-xl-3 cards">
-                            <div class="card">
-                                <div class="card-body" data-tracking="<?php echo $tracking; ?>">
-                                <button class="btn btn-outline-success btnaccept <?php echo $hide ?>" id="actionaccept" onclick="confirmAccept('<?php echo $cid; ?>', '<?php echo $tracking; ?>', this)"><i class="fa-solid fa-check"></i></button>
-                                            <button class="btn btn-outline-danger btndelete <?php echo $hide ?>" id="actiondelete" onclick="confirmDelete('<?php echo $cid; ?>', '<?php echo $tracking; ?>', this)"><i class="fa-solid fa-x"></i></button>
-                                    <h5 class="card-title"><?php echo "Table: " . $table_num; ?></h5>
-                                    <?php
-            
-                                    // Query to get product names for the current customer ID
-                                    $sql_pname = "SELECT * FROM admin_order WHERE cid=$cid and tracking_no = '$tracking'";
-                                    $result_pname = $connection->query($sql_pname);
-            
-                                    // Check if there are any product names for the current customer ID
-                                    if ($result_pname !== false && $result_pname->num_rows > 0) {
-                                        ?>
-                                         <div class=" d-flex bd-highlight">
-                                            <div class="ptitle prodnameh flex-fill bd-highlight"> Name </div>
-                                            <div class="ptitle pquantityh flex-fill bd-highlight"> Qty </div>
-                                        </div>
-                                        <?php
-                                        // Loop through each product name
-                                        while ($row_pname = $result_pname->fetch_assoc()) {
-                
-                                            ?>
-                                         <div class="d-flex bd-highlight det">
-                                            <div class="pquantity flex-fill bd-highlight">
-                                                <?php echo $row_pname['product_name']; ?>
-                                            </div>
-                                            <div class="pquantity flex-fill bd-highlight">
-                                               <?php echo $row_pname['quantity']; ?>
-                                            </div>
-                                         </div>
+        .instructions {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 0.5rem;
+        }
 
-                                    <?php
-                                        }
-                                    } else {
-                                        echo "No products found for customer ID: $cid, it might be cancelled due to lack of stock";
-                                    }
+        .instructions-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
 
-                                          
-                                        $sql_description = "SELECT * FROM product_instruction WHERE tracking_no = '$tracking'";
-                                        $result_descript = $connection->query($sql_description);
-                                        if ($result_descript) {
-                                            if ($result_descript->num_rows > 0) {
-                                                ?>
-                                                
-                                                <div class="description">
-                                                    <?php
-                                                    echo "<p>INSTRUCTION</p>";
-                                                    while ($row = $result_descript->fetch_assoc()) {
-                                                        echo $row['instruction']; 
-                                                    }
-                                                    ?>
-                                                </div>
-                                                <?php
-                                            } 
-                                        } else {
-                                            echo "Error executing query: " . $connection->error;
-                                        }
-                       
+        .btn-done {
+    width: 100%;
+    margin-top: auto; /* Ensures the button is pushed to the end of the card */
+    padding: 0.75rem;
+    background-color: #22c55e;
+    color: white;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+}
+        .btn-done:hover{
+            background-color: #92E2B0;
+        }
 
-                                    if($row_preparing['prepared_count'] !== $row_track['count_track']){
-                                    ?>
-                                        <button class="donebtn btn btn-primary" id="donebtn" name="donebtn" onclick="confirmDone('<?php echo $cid; ?>', '<?php echo $tracking; ?>', this)">DONE</button>
-                                    <?php
-                                    }else{
-                                    ?>
-                                       <button class="donebtn1 btn btn-primary" id="donebtn" name="donebtn" onclick="confirmDone('<?php echo $cid; ?>', '<?php echo $tracking; ?>', this)">DONE</button>
-                                    <?php
-                                    }
-                                    ?>
-                                
-                                </div>
-                            </div>
-                        </div>
-            <?php
-                    }
-                }
-            } else {
-                echo "No customer IDs found in the database.";
+        .btn-done:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        @media (max-width: 640px) {
+            .orders-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
             }
-            ?>
-            </div>
+            .order-header{
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        
+
+
+    </style>
+</head>
+<body>
+<div class="orders-grid">
+        <?php
+        // Fetch active orders
+        $sql = "SELECT DISTINCT table_number, tracking_no, cid FROM admin_order WHERE status NOT IN ('Done', 'Request', 'Cancelled')";
+        $result = $connection->query($sql);
+
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $cid = $row["cid"];
+                $tracking = $row['tracking_no'];
+                $table_num = $row['table_number'];
+
+                // Get order status counts
+                $counts = getOrderStatusCounts($connection, $cid, $tracking);
+
+                // Skip if all orders are cancelled
+                if ($counts['total'] === $counts['cancelled']) {
+                    continue;
+                }
+
+                // Determine if buttons should be hidden or disabled
+                $hideButtons = $counts['preparing'] === $counts['total'] ? "hide" : "";
+                $disableCompleteButton = $counts['preparing'] > 0 ? "" : "disabled";  // Disable the complete button if not preparing
+                ?>
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="table-number">Table <?php echo htmlspecialchars($table_num); ?></span>
+                        <div class="action-buttons">
+                            <button class="btn btn-accept <?php echo $hideButtons; ?>" 
+                                    onclick="confirmAccept('<?php echo $cid; ?>', '<?php echo $tracking; ?>', this)">
+                                <i class="fas fa-check"></i> Accept
+                            </button>
+                            <button class="btn btn-delete <?php echo $hideButtons; ?>" 
+                                    onclick="confirmDelete('<?php echo $cid; ?>', '<?php echo $tracking; ?>', this)">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="order-content">
+                        <div class="order-items">
+                            <div class="items-header">
+                                <span>Item</span>
+                                <span>Qty</span>
+                            </div>
+                            <?php
+                            $orderDetails = getOrderDetails($connection, $cid, $tracking);
+                            while ($item = $orderDetails->fetch_assoc()) {
+                                ?>
+                                <div class="item-row">
+                                    <span><?php echo htmlspecialchars($item['product_name']); ?></span>
+                                    <span><?php echo htmlspecialchars($item['quantity']); ?></span>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+
+                        <?php
+                        $instructions = getOrderInstructions($connection, $tracking);
+                        if ($instructions && $instructions->num_rows > 0) {
+                            ?>
+                            <div class="instructions">
+                                <div class="instructions-title">Special Instructions</div>
+                                <?php
+                                while ($instruction = $instructions->fetch_assoc()) {
+                                    echo htmlspecialchars($instruction['instruction']);
+                                }
+                                ?>
+                            </div>
+                        <?php } ?>
+                    </div>
+
+                    <button class="btn btn-done" 
+                            data-accepted="false" 
+                            <?php echo $disableCompleteButton; ?> 
+                            onclick="confirmDone('<?php echo $cid; ?>', '<?php echo $tracking; ?>', this)">
+                        Complete Order
+                    </button>
+                </div>
+                <?php
+            }
+        } else {
+            echo "<p class='emptyword'></p>";
+            echo " <img class='emptypic' src='Pic/emptyorder.svg' alt=''>";
+        }
+        ?>
+    </div>
+</div>
+
+<script>
+    function confirmAccept(cid, tracking, button) {
+        if (confirm('Accept this order?')) {
+            // Perform the necessary actions (like updating the database)
+            console.log('Order accepted:', cid, tracking);
+
+            // Find the closest order card to enable the 'Complete Order' button
+            const card = button.closest('.order-card');
+            const completeButton = card.querySelector('.btn-done');
+            
+            // Enable the 'Complete Order' button and remove the disabled attribute
+            completeButton.disabled = false;
+            completeButton.removeAttribute('disabled');
+            completeButton.setAttribute('data-accepted', 'true');
+
+            // Optional: Check if it's visually updating in the console
+            console.log('Complete button enabled:', completeButton);
+        }
+    }
+
+
+    function confirmDelete(cid, tracking, button) {
+        if (confirm('Reject this order?')) {
+            // Add your reject order logic here
+            console.log('Order rejected:', cid, tracking);
+        }
+    }
+
+    function confirmDone(cid, tracking, button) {
+        const accepted = button.getAttribute('data-accepted');
+        if (accepted === 'true' && confirm('Mark order as complete?')) {
+            // Add your complete order logic here
+            console.log('Order completed:', cid, tracking);
+        }
+    }
+</script>
+</body>
+</html>
