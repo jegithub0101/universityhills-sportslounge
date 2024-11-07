@@ -6,9 +6,8 @@ $username = "root";
 $password = "";
 $database = "university_hills";
 
-//Create Connection
+// Create Connection
 $connection = mysqli_connect($servername, $username, $password, $database);
-
 
 // Function to check if a user is logged in
 function isLoggedIn()
@@ -22,7 +21,6 @@ if (!isLoggedIn()) {
     exit;
 }
 
-
 // Check if the logout button was clicked
 if (isset($_POST['logout'])) {
     // Unset all session variables
@@ -35,10 +33,7 @@ if (isset($_POST['logout'])) {
     header("Location: staff-login.php");
     exit();
 }
-
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -54,26 +49,12 @@ if (isset($_POST['logout'])) {
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
 
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" href="Pic/logo.svg" type="image/x-icon">
     <link rel="stylesheet" href="css/sidebar.css">
-
-
-    <style>
-   
-
-
-
-        .clearbtn {
-            float: right;
-            margin-bottom: 1%;
-        }
-
-    </style>
 
     <style>
         body {
@@ -99,45 +80,45 @@ if (isset($_POST['logout'])) {
             margin-bottom: 20px;
         }
 
-            /* Table Styling */
+        
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
-            background-color: #fff; /* White background for the table */
+            background-color: #fff; 
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
         }
 
         table thead th {
-            background-color: #343a40; /* Semi-black color */
-            color: #12171e; /* White text */
+            background-color: #343a40; 
+            color: #12171e; 
             padding: 12px;
             text-align: left;
             font-weight: 600;
-            border-bottom: 2px solid #495057; /* Slightly lighter semi-black */
+            border-bottom: 2px solid #495057; 
         }
 
         table tbody tr {
-            background-color: #f8f9fa; /* Light gray for rows */
-            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+            background-color: #f8f9fa; 
+            transition: background-color 0.3s ease; 
         }
 
-        table tbody tr:hover {
-            background-color: #e9ecef; /* Slightly darker gray on hover */
+                table tbody tr:hover {
+            background-color: #e9ecef; 
         }
 
         table tbody td {
             padding: 12px;
-            border-bottom: 1px solid #dee2e6; /* Light gray for borders */
+            border-bottom: 1px solid #dee2e6; 
             font-size: 16px;
-            color: #333; /* Dark text for contrast */
+            color: #333; 
         }
 
-        /* Buttons */
+      
         .btn-primary {
-            background-color: #007bff; /* Bootstrap primary color */
+            background-color: #007bff; 
             border-color: #007bff;
             padding: 6px 12px;
             border-radius: 4px;
@@ -146,12 +127,12 @@ if (isset($_POST['logout'])) {
         }
 
         .btn-primary:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+            background-color: #0056b3; 
         }
 
-        /* Clear All Button */
+      
         .clear-btn {
-            background-color: #e74c3c; /* Red color for clear button */
+            background-color: #e74c3c; 
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -162,89 +143,69 @@ if (isset($_POST['logout'])) {
         }
 
         .clear-btn:hover {
-            background-color: #c0392b; /* Darker red on hover */
+            background-color: #c0392b; 
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             table tbody td, table thead th {
-                font-size: 14px; /* Smaller font size on mobile */
+                font-size: 14px; 
             }
 
             h1 {
-                font-size: 24px; /* Adjust heading size */
+                font-size: 24px; 
+            }
+
+            .concern_container {
+                padding: 20px; 
             }
         }
-    </style>
 
-    <style>
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 20px; 
+            }
 
-
-
-        .navbar{
-            display:none
+            .clearbtn {
+                float: none; 
+                margin-top: 10px;
+            }
         }
 
-        .navbar{
-                display:none
-            }
+        .navbar {
+            display: none;
+        }
+
         @media only screen and (max-width: 992px) {
-            .sidebar{
+            .sidebar {
                 display: none;
             }
 
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
+            .main-content {
+                top: 50px;
+                left: 0px;
+                width: 100%;
             }
 
-            .navbar{
+            .navbar {
                 display: block;
                 background-color: #12171e;
             }
-            .navbar-toggler{
+
+            .navbar-toggler {
                 height: 30px;
                 padding-top: 0px;
             }
-            .navbar-toggler-icon{
+
+            .navbar-toggler-icon {
                 font-size: 8pt;
                 margin-top: 0px;
             }
 
             .table-margin {
-            padding-top: 5%;
-            margin:2%;
+                padding-top: 5%;
+                margin: 2%;
+            }
         }
-        }
-
-
-
-            
-
-        @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-
-            .container {
-            padding: 5% 0% 0% 0%;
-            }
-
-        }
-
-        
     </style>
 </head>
 <body>
@@ -254,56 +215,53 @@ if (isset($_POST['logout'])) {
 
     <div class="concern_container">
         <div class="container">
-        <div class="table-margin">
-        <h1 class="mt-4">Concerns</h1>
+            <div class="table-margin">
+                <h1 class="mt-4">Concerns</h1>
 
-        <div class="clearbtn">
-        <button class="btn btn-danger" id="clear-all-btn">Clear All</button>
+                <div class="clearbtn">
+                    <button class="btn btn-danger" id="clear-all-btn">Clear All</button>
+                </div>
+                <table class="table table-striped mt-4">
+                    <thead>
+                        <tr>
+                            <th>Date and Time</th>
+                            <th>Table Number</th>
+                            <th>Concern</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        // Fetch data from the database
+                        $sql = "SELECT * FROM concerns";
+                        $result = $connection->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            // Output data of each row
+                            while ($row = $result->fetch_assoc()) {
+                                // Format the date and time
+                                $formatted_date_time = date("M j, Y g:ia", strtotime($row["date_time"]));
+                                
+                                echo "<tr>";
+                                echo "<td>" . $formatted_date_time . "</td>";
+                                echo "<td>" . $row["table_number"] . "</td>";
+                                echo "<td>" . $row["concern"] . "</td>";
+                                echo "<td><button class='btn btn-primary done-btn' data-cid='" . $row["CID"] . "'>Done</button></td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='4'>No concerns found.</td></tr>";
+                        }
+
+                        $connection->close();
+                    ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <table class="table table-striped mt-4">
-            <thead>
-                <tr>
-                    <th>Date and Time</th>
-                    <th>Table Number</th>
-                    <th>Concern</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
-  
-                // Fetch data from the database
-                $sql = "SELECT * FROM concerns";
-                $result = $connection->query($sql);
-
-                if ($result->num_rows > 0) {
-                    // Output data of each row
-                    while($row = $result->fetch_assoc()) {
-                        // Format the date and time
-                        $formatted_date_time = date("M j, Y g:ia", strtotime($row["date_time"]));
-                        
-                        echo "<tr>";
-                        echo "<td>" . $formatted_date_time . "</td>";
-                        echo "<td>" . $row["table_number"] . "</td>";
-                        echo "<td>" . $row["concern"] . "</td>";
-                        echo "<td><button class='btn btn-primary done-btn' data-cid='" . $row["CID"] . "'>Done</button></td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='4'>No concerns found.</td></tr>";
-                }
-
-                $connection->close();
-                ?>
-            </tbody>
-        </table>
-        </div>
-        
-
-    </div>
     </div>
 
-    <!-- Bootstrap JS and jQuery -->
+        <!-- Bootstrap JS and jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -334,7 +292,7 @@ if (isset($_POST['logout'])) {
                     type: 'POST',
                     data: {cid: cid},
                     success: function(response) {
-                        // alert(response);
+                        // Reload the page to reflect changes
                         location.reload();
                     },
                     error: function(xhr, status, error) {
@@ -348,7 +306,7 @@ if (isset($_POST['logout'])) {
                     url: 'admin-concern-clear.php',
                     type: 'POST',
                     success: function(response) {
-                        // alert(response);
+                        // Reload the page to reflect changes
                         location.reload();
                     },
                     error: function(xhr, status, error) {
@@ -359,16 +317,13 @@ if (isset($_POST['logout'])) {
         });
     </script>
 
-<script>
-    let btn = document.querySelector('#btn');
-    let sidebar = document.querySelector('.sidebar');
+    <script>
+        let btn = document.querySelector('#btn');
+        let sidebar = document.querySelector('.sidebar');
 
-    btn.onclick = function () {
-        sidebar.classList.toggle('active');
-    };
-</script>
-
-
-
+        btn.onclick = function () {
+            sidebar.classList.toggle('active');
+        };
+    </script>
 </body>
 </html>

@@ -159,7 +159,7 @@ $queueResult = $conn->query($queueSql);
         <!-- Queue List -->
         <div class="card mt-3">
             <div class="card-header">
-                <h3>Queue List XX</h3>
+                <h3>Queue List</h3>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

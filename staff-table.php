@@ -13,7 +13,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-
 // Query the data from the tables
 $sql = "SELECT table_number, verification_code FROM tables";
 $result = $conn->query($sql);
@@ -31,7 +30,7 @@ $result = $conn->query($sql);
   
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-straight/css/uicons-solid-straight.css'>
@@ -40,14 +39,6 @@ $result = $conn->query($sql);
     <link rel="icon" href="Pic/logo.svg" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
-    
-
-    <link rel="icon" href="Pic/uhicon.png" type="image/x-icon" />
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -66,74 +57,74 @@ $result = $conn->query($sql);
             background-color: #ffffff; /* White for odd rows */
         }
 
-       
-
-        .main-content{
+        .main-content {
             height: 100vh;
             overflow-x: hidden;
             padding-left: 5%;
         }
        
-        h1{
+        h1 {
             padding-top: 10px;
         }
 
-        .navbar{
-            display:none
+        .navbar {
+            display: none;
         }
 
-
         @media only screen and (max-width: 992px) {
-            .sidebar{
+            .sidebar {
                 display: none;
             }
 
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
+            .main-content {
+                top: 50px;
+                left: 0px;
+                width: 100%;
             }
 
-            .navbar{
+            .navbar {
                 display: block;
                 background-color: #12171e;
             }
 
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-            .navbar-toggler{
+            .navbar-toggler {
                 height: 30px;
                 padding-top: 0px;
             }
-            .navbar-toggler-icon{
+
+            .navbar-toggler-icon {
                 font-size: 8pt;
                 margin-top: 0px;
             }
 
-
-        }
-        
-    </style>
-
-    <style>
-        /* Responsive design adjustments */
-        h1 {
-            font-size: 2.5rem; /* Larger font for bigger screens */
-        }
-
-        @media (max-width: 576px) { /* Small devices */
             h1 {
-                font-size: 1.8rem; /* Smaller font for mobile */
+                font-size: 2.5rem; 
+            }
+        }
+
+        @media (max-width: 576px) { 
+            h1 {
+                font-size: 1.8rem; 
             }
 
             .table {
-                font-size: 0.9rem; /* Adjust table font size for mobile */
+                font-size: 0.9rem; 
             }
 
             .btn {
-                font-size: 0.8rem; /* Adjust button font size for mobile */
+                font-size: 0.8rem; 
+            }
+        }
+
+        /* Custom table container for responsive design */
+        .table-responsive-wrapper {
+            overflow-x: auto;
+        }
+
+        /* Apply scrollbar only below 430px width */
+        @media (max-width: 430px) {
+            .table-responsive-wrapper {
+                overflow-x: scroll;
             }
         }
     </style>
@@ -147,37 +138,31 @@ $result = $conn->query($sql);
         <div class="container-fluid">
             <div class="container">
                 <div class="row">
-                    <div id="link_wrapper">
-
-
-
+                    <div id="link_wrapper" class="table-responsive-wrapper">
+                        <!-- Table goes here -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-
-
     <script>
         function loadXMLDoc() {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("link_wrapper").innerHTML =
-                this.responseText;
+                    document.getElementById("link_wrapper").innerHTML = this.responseText;
                 }
             };
             xhttp.open("GET", "admin-table-server.php", true);
             xhttp.send();
-            }
+        }
 
-            setInterval(function(){
-                loadXMLDoc();
-            },1000);
+        setInterval(function(){
+            loadXMLDoc();
+        }, 1000);
 
-            window.onload = loadXMLDoc;
+        window.onload = loadXMLDoc;
     </script>
 
     <script>
@@ -185,15 +170,12 @@ $result = $conn->query($sql);
             var verificationElement = $('#verification-' + tableNumber);
             
             $.ajax({
-                url: 'generate-code.php', // Point to your new PHP file
+                url: 'generate-code.php', 
                 type: 'POST',
-                data: {
-                    tid: tid
-                },
+                data: { tid: tid },
                 success: function(response) {
-                    // Assuming the response is the new verification code
                     verificationElement.text(response);
-                    alert('change verificaiton code of table ' + tableNumber +'?');
+                    alert('Change verification code of table ' + tableNumber + '?');
                 },
                 error: function(xhr, status, error) {
                     console.error(xhr);
@@ -202,9 +184,6 @@ $result = $conn->query($sql);
             });
         }
     </script>
-
-
-
 
     <script>
         let btn = document.querySelector('#btn');

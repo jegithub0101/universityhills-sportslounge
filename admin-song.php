@@ -72,7 +72,6 @@ if (isset($_POST['logout'])) {
         .main-content{
             height: 100vh;
             overflow-x: hidden;
-            padding-left: 5%;
         }
         .x{
             padding-top: 0;
@@ -95,57 +94,9 @@ if (isset($_POST['logout'])) {
 
     <style>
 
-        .navbar{
-            display:none
-        }
-        @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-
-        }
-
         .card-header {
             background-color: #343a40; /* Dark color */
             color: #fff; /* Text color */
-        }
-        .navbar{
-                display:none
-            }
-        @media only screen and (max-width: 992px) {
-            .sidebar{
-                display: none;
-            }
-
-            .main-content{
-            top:50px;
-            left:0px;
-            width: 100%;
-            }
-
-            .navbar{
-                display: block;
-                background-color: #12171e;
-            }
-            .navbar-toggler{
-                height: 30px;
-                padding-top: 0px;
-            }
-            .navbar-toggler-icon{
-                font-size: 8pt;
-                margin-top: 0px;
-            }
         }
 
     </style>
